@@ -1,3 +1,5 @@
+import JoinPage from "@/features/UserManagement/JoinPage";
+
 export default function Home() {
-  return <></>;
+  return <JoinPage />;
 }
