@@ -97,5 +97,25 @@ export const LoginPageStyled = styled.div`
         }
       }
     }
+
+    .or-line {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .or-line p {
+      margin: 0 10px;
+      font-size: 14px;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .or-line .line {
+      flex: 1;
+      height: 1px;
+      background-color: #ccc;
+    }
   }
 `;

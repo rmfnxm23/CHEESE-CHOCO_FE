@@ -103,7 +103,7 @@ const LoginPage = () => {
               <p
                 className="move-join"
                 onClick={() => {
-                  router.push("/signup");
+                  router.push("/join");
                 }}
               >
                 회원가입
@@ -111,6 +111,12 @@ const LoginPage = () => {
             </div>
           </div>
         </form>
+        {/* <div className="or-line">
+          <span className="line" />
+          <p>or</p>
+          <span className="line" />
+        </div>
+        <div className="naver-login"></div> */}
       </div>
     </LoginPageStyled>
   );
