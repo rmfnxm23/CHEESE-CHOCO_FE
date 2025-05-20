@@ -8,8 +8,9 @@ import clsx from "clsx";
 const FindPwPage = () => {
   const router = useRouter();
 
-  //   const [userEmail, setUserEmail] = useState(""); // 조회한 이메일
   const [notFound, setNotFound] = useState(""); // 등록된 이메일이 없을 때 메세지 관리
+
+  const [step, setStep] = useState("form"); // form 형태(비밀번호 찾기 폼) VS 메일 전송 메시지 관리
 
   // 비밀번호 찾기 버튼 (이메일 조회)
   const formik = useFormik({
@@ -21,7 +22,6 @@ const FindPwPage = () => {
 
       if (!email.trim()) {
         setNotFound("이메일을 입력해주세요.");
-        // setUserEmail("");
         return;
       }
 
@@ -32,11 +32,13 @@ const FindPwPage = () => {
 
         if (res.data.success === true) {
           console.log(res.data.userId);
-          //   setUserEmail(res.data.userId.email);
-          //   console.log(userEmail);
-          setNotFound("ok");
+          //   setNotFound("ok");
+          setStep("success");
         } else {
-          setNotFound(res.data.message);
+          //   setNotFound(res.data.message);
+          alert(res.data.message);
+          //   router.push("/login");
+          router.reload();
         }
       } catch (err) {
         console.error(err);
@@ -47,31 +49,33 @@ const FindPwPage = () => {
   return (
     <FindPwStyled className={clsx("findpw-wrap")}>
       <div className="findpw-container">
-        <h2>비밀번호 찾기</h2>
-        <form onSubmit={formik.handleSubmit}>
-          <input
-            type="email"
-            name="email"
-            value={formik.values.email}
-            // onChange={formik.handleChange}
-            onChange={(e) => {
-              formik.handleChange(e);
-              setNotFound("");
-            }}
-          />
-          <button type="submit" style={{ cursor: "pointer" }}>
-            찾기
-          </button>
-          {/* {userEmail && (
-            <div>
-              <strong>{userEmail}</strong> 로 등록된 계정이 있습니다.
-            </div>
-          )}
-          {!userEmail && notFound && (
-            <div className="error-message">{notFound}</div>
-          )} */}
-          {notFound && <div className="error-message">{notFound}</div>}
-        </form>
+        {step === "form" && (
+          <>
+            <h2>비밀번호 찾기</h2>
+            <form onSubmit={formik.handleSubmit}>
+              <input
+                type="email"
+                name="email"
+                value={formik.values.email}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  setNotFound("");
+                }}
+              />
+              <button type="submit" style={{ cursor: "pointer" }}>
+                찾기
+              </button>
+
+              {notFound && <div className="error-message">{notFound}</div>}
+            </form>
+          </>
+        )}
+
+        {step === "success" && (
+          <div className="success-message">
+            비밀번호 재설정 링크가 이메일로 전송되었습니다.
+          </div>
+        )}
       </div>
     </FindPwStyled>
   );
