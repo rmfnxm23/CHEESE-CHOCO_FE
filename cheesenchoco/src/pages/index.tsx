@@ -1,5 +1,5 @@
-import JoinPage from "@/features/UserManagement/JoinPage";
+import MainPage from "@/features/MainPage";
 
 export default function Home() {
-  return <JoinPage />;
+  return <MainPage />;
 }
