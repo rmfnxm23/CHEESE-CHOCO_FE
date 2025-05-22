@@ -141,6 +141,10 @@ const AdminPage = () => {
         dataSource={products}
         columns={columns}
         rowKey="id" // rowKey 미설정 시 selectbox를 선택해도 전체선택 / 전체해제만 가능
+        // onRow={()=>{router.push("/admin")}}
+        onRow={(record) => ({
+          onClick: () => router.push(`/admin/detail/${record.id}`),
+        })}
       />
     </>
   );

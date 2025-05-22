@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { LoginPageStyled } from "./styled";
 import clsx from "clsx";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -35,6 +36,10 @@ const LoginPage = () => {
           console.log(res.data.message);
           setLoginError(res.data.message);
         } else {
+          // 토큰 쿠키에 저장 (예: 1시간 만료)
+          Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 }); // 1시간
+          Cookies.set("refreshToken", res.data.refreshToken, { expires: 1 }); // 1일
+
           alert(res.data.message);
           router.push("/");
         }

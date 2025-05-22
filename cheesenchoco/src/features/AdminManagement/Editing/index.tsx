@@ -29,7 +29,7 @@ const EditingPage = () => {
 
   // 수정할 내용 가져오기
   useEffect(() => {
-    const getUpdatePost = async (id: any) => {
+    const getUpdateItem = async (id: any) => {
       if (!id) return;
 
       try {
@@ -38,16 +38,16 @@ const EditingPage = () => {
         );
         // console.log(res.data.data.img);
         // console.log(res.data.data.imgUrls);
-        const post = res.data.data;
+        const item = res.data.data;
 
-        setProduct(post);
-        setExistingImages(post.imgUrls || []);
+        setProduct(item);
+        setExistingImages(item.imgUrls || []);
         setPreviewImages([]); // 새로 불러오면 새 이미지 없음
       } catch (err) {
         console.error(err);
       }
     };
-    getUpdatePost(id);
+    getUpdateItem(id);
   }, [id]);
 
   const formik = useFormik({
