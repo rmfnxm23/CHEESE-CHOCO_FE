@@ -1,59 +1,23 @@
 import styled from "styled-components";
 
-// export const HeaderStyled = styled.div`
-//   &.header-wrap {
-//     display: flex;
-//     justify-content: space-between;
-//     padding: 50px 0;
-
-//     .header-category {
-//       display: flex;
-//       padding: 0 30px;
-//       gap: 10px;
-//       font-size: 15px;
-//       font-weight: 400;
-//     }
-
-//     .header-logo {
-//       text-align: center;
-//     }
-
-//     .header-right {
-//       display: flex;
-//       padding: 0 30px;
-//       gap: 10px;
-//     }
-//   }
-// `;
-
 export const HeaderStyled = styled.div`
-  &.header-wrap {
-    position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background: transparent; // 헤더 배경 투명
+  color: white; // 텍스트가 배너 위에서 보이도록
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 40px;
+
+  .header-category,
+  .header-logo,
+  .header-right {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 50px 0;
-
-    .header-category {
-      display: flex;
-      padding: 0 30px;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 400;
-    }
-
-    .header-logo {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-weight: 900;
-      font-size: 22px;
-    }
-
-    .header-right {
-      display: flex;
-      padding: 0 30px;
-      gap: 10px;
-    }
+    gap: 50px;
   }
 `;

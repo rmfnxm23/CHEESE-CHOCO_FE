@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { AuthProvider } from "@/context/AuthContext";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
@@ -19,8 +20,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       {/* <Header /> */}
       {/* {!noHeaderFooter.includes(Component.name) && <Header />} */}
-      {!isExlcluded && <Header />}
-      <Component {...pageProps} />
+      {/* {!isExlcluded && <Header />} */}
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
   );
 }

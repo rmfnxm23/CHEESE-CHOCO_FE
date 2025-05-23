@@ -5,9 +5,12 @@ import { useState } from "react";
 import { LoginPageStyled } from "./styled";
 import clsx from "clsx";
 import Cookies from "js-cookie";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
   const router = useRouter();
+
+  const { login } = useAuth();
 
   const [loginError, setLoginError] = useState("");
 
@@ -30,6 +33,10 @@ const LoginPage = () => {
 
         const res = await axios.post("http://localhost:5000/user/login", data, {
           //   withCredentials: true, // 요청에 자동으로 쿠키가 담겨서 보냄. 또한, 서버로부터 오는 쿠키를 받기 위해서도 이 설정은 꼭 필요! (서버에서도 credentials 설정 필요)
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
 
         if (res.data.success === false) {
@@ -39,6 +46,8 @@ const LoginPage = () => {
           // 토큰 쿠키에 저장 (예: 1시간 만료)
           Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 }); // 1시간
           Cookies.set("refreshToken", res.data.refreshToken, { expires: 1 }); // 1일
+
+          login(res.data.user, res.data.accessToken, res.data.refreshToken);
 
           alert(res.data.message);
           router.push("/");
