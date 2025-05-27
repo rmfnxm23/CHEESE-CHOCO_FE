@@ -133,3 +133,11 @@ export const formatPhone = (phone: string) => {
   }
   return formattedPhone;
 };
+
+// 가격 세자리마다 콤마(,)
+export const formatPrice = (price: number) => {
+  const formatted = price.toLocaleString(); // 숫자를 문자로
+  const formattedPrice = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 세자리마다 콤마(,)
+
+  return formattedPrice;
+};
