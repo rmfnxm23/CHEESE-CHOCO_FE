@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DetailPageStyled } from "./styled";
 import clsx from "clsx";
+import DOMPurify from "dompurify";
 
 interface productProps {
   id: number;
@@ -48,7 +49,7 @@ const DetailPage = () => {
           {existingImages.map((src, index) => (
             <div key={`existing-${index}`} className="previewBox">
               <img
-                src={`${BASE_URL}/uploads/${src}`}
+                src={`${BASE_URL}/uploads/product/${src}`}
                 alt={`기존 이미지-${index}`}
               />
             </div>
@@ -61,9 +62,11 @@ const DetailPage = () => {
           <div>
             <strong>가격:</strong> {product?.price}
           </div>
-          <div>
-            <strong>내용:</strong> {product?.content}
-          </div>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(product?.content || ""),
+            }}
+          ></div>
         </div>
       </div>
     </DetailPageStyled>

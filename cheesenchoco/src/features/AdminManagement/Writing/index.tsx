@@ -1,38 +1,65 @@
+"use client";
+
 import axios from "axios";
 import { useFormik } from "formik";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WritingStyled } from "./styled";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 
+import dynamic from "next/dynamic";
+
+// TipTap 에디터 동적 import (SSR 방지)
+const Editor = dynamic(() => import("@/components/Common/TipTap"), {
+  ssr: false,
+});
+
 const WritingPage = () => {
   const router = useRouter();
 
-  //   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-
   const [errorMessage, setErrorMessage] = useState("");
+  const [categories, setCategories] = useState([]);
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ ref 선언
+  // const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ ref 선언
+
+  const BASE_URL = "http://localhost:5000";
+
+  // 카테고리 데이터 가져오기
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/category`);
+        console.log(res.data.data);
+        if (res.data.data) {
+          setCategories(res.data.data);
+        }
+      } catch (err) {
+        console.error("카테고리 조회 실패: ", err);
+      }
+    };
+    getCategory();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
-      //   img: null,
       img: [],
       name: "",
       price: "",
       content: "",
+      color: "",
+      size: "",
+      categoryId: "",
     },
     onSubmit: async (values) => {
-      console.log(values);
       setErrorMessage("");
 
-      const img = values.img;
-      const name = values.name;
-      const price = values.price;
-      const content = values.content;
+      const { img, name, price, content, color, size, categoryId } = values;
+      // console.log(values);
 
-      //   if (!img) {
+      if (!categoryId) {
+        return setErrorMessage("카테고리를 선택해주세요.");
+      }
       if (!img.length) {
         return setErrorMessage("파일을 선택해주세요.");
       }
@@ -42,15 +69,20 @@ const WritingPage = () => {
       if (!price) {
         return setErrorMessage("가격을 기입해주세요.");
       }
-      if (!content) {
+      // if (!content) {
+      //   return setErrorMessage("내용을 입력해주세요.");
+      // }
+
+      // HTML 문자열에서 유의미한 내용이 있는지 판단
+      const plainText = content.replace(/<[^>]*>/g, "").trim(); // 태그 제거
+      const hasImage = /<img\s+[^>]*src=/.test(content); // img 태그 유무 확인
+
+      if (!plainText && !hasImage) {
         return setErrorMessage("내용을 입력해주세요.");
       }
 
       const formData = new FormData();
 
-      //   if (values.img) {
-      //     formData.append("img", img);
-      //   }
       img.forEach((file) => {
         formData.append("img", file); // 배열이 아닌 같은 key로 여러 개 추가
       });
@@ -58,14 +90,13 @@ const WritingPage = () => {
       formData.append("price", price.replace(/,/g, ""));
       formData.append("content", content);
 
-      //   // FormData의 value 확인
-      //   for (let value of formData.values()) {
-      //     console.log(value);
-      //   }
+      formData.append("color", color);
+      formData.append("size", size);
+      formData.append("categoryId", categoryId);
 
       try {
         const res = await axios.post(
-          "http://localhost:5000/admin/product/register",
+          `${BASE_URL}/admin/product/register`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -73,13 +104,6 @@ const WritingPage = () => {
         );
 
         alert(res.data.message);
-        // formik.resetForm();
-        // // setPreviewImage(null);
-        // setPreviewImages([]);
-
-        // if (fileInputRef.current) {
-        //   fileInputRef.current.value = ""; // ✅ 파일 input 초기화
-        // }
 
         router.push("/admin");
       } catch (err) {
@@ -88,25 +112,15 @@ const WritingPage = () => {
     },
   });
 
-  // 선택한 파일 미리보기(한개)
+  // 파일 업로드 및 미리보기 처리
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const file = e.currentTarget.files?.[0];
     const files = e.currentTarget.files;
-    // if (file) {
-    //   formik.setFieldValue("img", file);
 
-    //   if (previewImage) {
-    //     URL.revokeObjectURL(previewImage); // 이전 URL 제거
-    //   }
-
-    //   const previewUrl = URL.createObjectURL(file);
-    //   setPreviewImage(previewUrl);
-    // }
     if (files && files.length > 0) {
       const fileArray = Array.from(files);
       formik.setFieldValue("img", fileArray);
 
-      // 기존 미리보기 해제
+      // 기존 미리보기 url 해제
       previewImages.forEach((url) => URL.revokeObjectURL(url));
 
       const previewUrls = fileArray.map((file) => URL.createObjectURL(file));
@@ -119,49 +133,35 @@ const WritingPage = () => {
       <div className="writing-container">
         <h2>상품 등록</h2>
         <form onSubmit={formik.handleSubmit}>
-          {/* <select
+          <select
             name="categoryId"
             value={formik.values.categoryId}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setErrorMessage("");
+            }}
           >
             <option value="">카테고리 선택</option>
-            {categories.map((x) => (
+            {categories.map((x: any) => (
               <option value={x.id} key={x.id}>
                 {x.category}
               </option>
             ))}
-          </select> */}
+          </select>
           <input
             type="file"
             name="img"
             accept="image/*" // 이미지 파일만
             multiple // 이미지 여러개 선택
-            // value={formik.values.img}
             onChange={handleFileChange}
           />
 
-          {/* 이미지 미리보기 한개*/}
-          {/* {previewImage && (
-            <div style={{ margin: "10px 0" }}>
-              <img
-                src={previewImage}
-                alt="미리보기"
-                style={{ maxWidth: "150px", height: "auto" }}
-              />
-            </div>
-          )} */}
-          {/* 이미지 미리보기 여러 개 */}
+          {/* 이미지 미리보기 */}
           <div className="image-preview-wrapper">
             {previewImages.map((src, index) => (
-              <img
-                key={index}
-                src={src}
-                alt={`미리보기-${index}`}
-                // style={{ maxWidth: "150px", height: "auto" }}
-              />
+              <img key={index} src={src} alt={`미리보기-${index}`} />
             ))}
           </div>
-
           <input
             type="text"
             name="name"
@@ -172,14 +172,12 @@ const WritingPage = () => {
               setErrorMessage("");
             }}
           />
-
           <input
             type="text"
             name="price"
             placeholder="가격"
             value={formik.values.price}
             onChange={(e) => {
-              //   formik.handleChange;
               const inputPrice = e.target.value.replace(/\D/g, "");
               const formattedPrice = inputPrice.replace(
                 /\B(?=(\d{3})+(?!\d))/g,
@@ -189,14 +187,34 @@ const WritingPage = () => {
               setErrorMessage("");
             }}
           />
+          <input
+            type="text"
+            name="color"
+            placeholder="색상"
+            value={formik.values.color}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setErrorMessage("");
+            }}
+          />
 
           <input
             type="text"
-            name="content"
-            placeholder="내용"
-            value={formik.values.content}
-            onChange={formik.handleChange}
+            name="size"
+            placeholder="사이즈"
+            value={formik.values.size}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setErrorMessage("");
+            }}
           />
+
+          {/* TipTap Editor (HTML 값 저장됨) */}
+          <Editor
+            value={formik.values.content}
+            onChange={(html) => formik.setFieldValue("content", html)}
+          />
+
           <button
             type="submit"
             // disabled={!isValid}

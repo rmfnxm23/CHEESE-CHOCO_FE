@@ -2,6 +2,7 @@ import { Button, Table } from "antd";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 
 interface productProps {
   id: number;
@@ -56,6 +57,13 @@ const AdminPage = () => {
   // row: 하나의 row data [Object]
   // index: row index [Number]
 
+  // HTML → 텍스트만 추출하는 유틸
+  const stripHtml = (html: string) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = DOMPurify.sanitize(html); // 안전하게 정화 후
+    return tempDiv.textContent || "";
+  };
+
   const columns = [
     {
       title: "No.",
@@ -81,6 +89,11 @@ const AdminPage = () => {
       title: "Content",
       dataIndex: "content",
       key: "content",
+      render: (html: string) => {
+        const text = stripHtml(html);
+        const truncated = text.length > 100 ? text.slice(0, 100) + "..." : text;
+        return <span>{truncated}</span>;
+      },
     },
     {
       title: "Management",
@@ -123,9 +136,6 @@ const AdminPage = () => {
 
   return (
     <>
-      {/* {products.map((product) => (
-        <div key={product.id}>{product.name}</div>
-      ))} */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3>상품 관리</h3>
         <Button

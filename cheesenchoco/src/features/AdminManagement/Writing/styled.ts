@@ -25,7 +25,8 @@ export const WritingStyled = styled.div`
   }
 
   .writing-container input[type="text"],
-  .writing-container input[type="file"] {
+  .writing-container input[type="file"],
+  .writing-container select {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -38,6 +39,23 @@ export const WritingStyled = styled.div`
 
   .writing-container input[type="file"] {
     padding: 8px;
+  }
+
+  /* ✅ select 옵션 dropdown 너비 통일 (브라우저 기본 설정 무시) */
+  .writing-container select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+  }
+
+  /* 드롭다운 옵션 스타일은 일부 브라우저에서 제한적이나,
+     select 박스와 width 일치하도록 강제 설정 */
+  .writing-container select option {
+    width: 100%;
   }
 
   .writing-container button[type="submit"] {
