@@ -35,5 +35,14 @@ export const ProductCardStyled = styled.div`
     padding: 11px;
     border-top: 1px solid #888;
     height: 70px;
+    gap: 20px;
+
+    .product-name {
+      width: 80%;
+    }
+
+    .product-price {
+      width: 20%;
+    }
   }
 `;

@@ -39,14 +39,14 @@ const ProductCard = ({
         <div className="product-image-wrap">
           <div className="img-box">
             <img
-              src={`${BASE_URL}/uploads/${imgUrls}`}
+              src={`${BASE_URL}/uploads/product/${imgUrls}`}
               alt={`기존 이미지-${id}`}
             />
           </div>
         </div>
         <div className="product-title">
-          <p>{name}</p>
-          <p>{formattedPrice}원</p>
+          <p className="product-name">{name}</p>
+          <p className="product-price">{formattedPrice}원</p>
         </div>
       </div>
     </ProductCardStyled>
