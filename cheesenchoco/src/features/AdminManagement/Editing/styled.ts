@@ -25,7 +25,8 @@ export const EditingStyled = styled.div`
   }
 
   .writing-container input[type="text"],
-  .writing-container input[type="file"] {
+  .writing-container input[type="file"],
+  select {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;

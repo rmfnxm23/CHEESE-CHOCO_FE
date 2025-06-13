@@ -9,6 +9,7 @@ interface productProps {
   name: string;
   price: number;
   content: string;
+  imgUrls: string[];
 }
 
 const AdminPage = () => {
@@ -34,10 +35,14 @@ const AdminPage = () => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    console.log(products);
+  });
+
   // 삭제 기능
   const handleDelete = async (id: number) => {
     console.log("id", id);
-
+    confirm("삭제하시겠습니까?");
     try {
       const res = await axios.delete(
         `http://localhost:5000/admin/delete/${id}`
@@ -63,12 +68,27 @@ const AdminPage = () => {
     tempDiv.innerHTML = DOMPurify.sanitize(html); // 안전하게 정화 후
     return tempDiv.textContent || "";
   };
-
+  const BASE_URL = "http://localhost:5000";
   const columns = [
     {
       title: "No.",
       dataIndex: "id",
       key: "id",
+    },
+    {
+      title: "Thumbnail",
+      dataIndex: "img",
+      key: "img",
+      render: (_: any, record: productProps) => {
+        return (
+          <img
+            width={30}
+            height={30}
+            src={`${BASE_URL}/uploads/product/${record.imgUrls[0]}`}
+            alt={`기존 이미지-${record.id}`}
+          />
+        );
+      },
     },
     {
       title: "Name",
@@ -85,16 +105,16 @@ const AdminPage = () => {
         return <span>{formattedPrice}원</span>;
       },
     },
-    {
-      title: "Content",
-      dataIndex: "content",
-      key: "content",
-      render: (html: string) => {
-        const text = stripHtml(html);
-        const truncated = text.length > 100 ? text.slice(0, 100) + "..." : text;
-        return <span>{truncated}</span>;
-      },
-    },
+    // {
+    //   title: "Content",
+    //   dataIndex: "content",
+    //   key: "content",
+    //   render: (html: string) => {
+    //     const text = stripHtml(html);
+    //     const truncated = text.length > 100 ? text.slice(0, 100) + "..." : text;
+    //     return <span>{truncated}</span>;
+    //   },
+    // },
     {
       title: "Management",
       dataIndex: "management",
@@ -104,7 +124,8 @@ const AdminPage = () => {
         <div>
           <Button
             type="link"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               router.push(`/admin/edit/${record.id}`);
             }}
           >
@@ -113,7 +134,8 @@ const AdminPage = () => {
           <Button
             type="link"
             danger
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleDelete(record.id);
             }}
           >

@@ -5,12 +5,23 @@ import { useEffect, useRef, useState } from "react";
 import { EditingStyled } from "./styled";
 import clsx from "clsx";
 
+import dynamic from "next/dynamic";
+
+// TipTap 에디터 동적 import (SSR 방지)
+const Editor = dynamic(() => import("@/components/Common/TipTap"), {
+  ssr: false,
+});
 interface productProps {
   id: number;
   name: string;
   price: number;
   content: string;
   imgUrls: string[];
+  categoryId: number;
+  colorArray: string[];
+  sizeArray: string[];
+  // color: string;
+  // size: string;
 }
 
 const EditingPage = () => {
@@ -18,6 +29,10 @@ const EditingPage = () => {
   const { id } = router.query;
 
   const [product, setProduct] = useState<productProps>(); // 상품 관리
+
+  const [category, setCategory] = useState<{ id: number; category: string }[]>(
+    []
+  );
 
   const [existingImages, setExistingImages] = useState<string[]>([]); // 상품 데이터의 이미지만 관리 (서버에 저장된 이미지들)
 
@@ -50,6 +65,25 @@ const EditingPage = () => {
     getUpdateItem(id);
   }, [id]);
 
+  useEffect(() => {
+    console.log(product, "카테고리있나...");
+  });
+
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/category");
+        console.log(res.data.data);
+        if (res.data.data) {
+          setCategory(res.data.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getCategory();
+  }, []);
+
   const formik = useFormik({
     enableReinitialize: true, // ← 이게 있어야 갱신됨
     initialValues: {
@@ -58,6 +92,9 @@ const EditingPage = () => {
       price:
         product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "",
       content: product?.content || "",
+      color: product?.colorArray || [],
+      size: product?.sizeArray || [],
+      categoryId: product?.categoryId || "",
     },
     onSubmit: async (values) => {
       console.log(values);
@@ -67,10 +104,16 @@ const EditingPage = () => {
       const name = values.name;
       const price = values.price;
       const content = values.content;
+      const color = values.color;
+      const size = values.size;
+      const categoryId = values.categoryId;
 
-      //   if (!img.length) {
-      //     return setErrorMessage("파일을 선택해주세요.");
-      //   }
+      // if (!categoryId) {
+      //   return setErrorMessage("카테고리를 선택해주세요.");
+      // }
+      // if (!img.length) {
+      //   return setErrorMessage("파일을 선택해주세요.");
+      // }
       if (!name) {
         return setErrorMessage("상품명을 기입해주세요.");
       }
@@ -102,6 +145,14 @@ const EditingPage = () => {
       formData.append("name", name);
       formData.append("price", price.replace(/,/g, ""));
       formData.append("content", content);
+
+      // 디버깅을 위한 console.log 추가
+      console.log("Type of color:", typeof color);
+      console.log("Value of color:", color);
+
+      formData.append("color", color.join(","));
+      formData.append("size", size.join(","));
+      formData.append("categoryId", String(categoryId));
 
       try {
         const res = await axios.post(
@@ -154,12 +205,35 @@ const EditingPage = () => {
             onChange={formik.handleChange}
           >
             <option value="">카테고리 선택</option>
-            {categories.map((x) => (
-              <option value={x.id} key={x.id}>
+            {category.map((x: any) => (
+              <option key={x.id} value={x.id}>
                 {x.category}
               </option>
             ))}
           </select> */}
+
+          <select
+            name="categoryId"
+            value={formik.values.categoryId}
+            onChange={formik.handleChange}
+          >
+            {/* 현재 선택된 카테고리를 기본으로 표시 */}
+            {/* <option value="">
+              {category.length > 0 && product
+                ? category.find((x: any) => x.id === product.categoryId)
+                    ?.category || "카테고리 선택"
+                : "카테고리 선택"}
+            </option> */}
+
+            {/* 나머지 카테고리 표시 */}
+            {category
+              // .filter((x: any) => x.id !== product?.categoryId) // 현재 선택된 카테고리는 중복 안 되게
+              .map((x: any) => (
+                <option key={x.id} value={x.id}>
+                  {x.category}
+                </option>
+              ))}
+          </select>
 
           <input
             type="file"
@@ -197,7 +271,7 @@ const EditingPage = () => {
               : existingImages.map((src, index) => (
                   <div key={`existing-${index}`} className="preview-box">
                     <img
-                      src={`${BASE_URL}/uploads/${src}`}
+                      src={`${BASE_URL}/uploads/product/${src}`}
                       alt={`기존 이미지-${index}`}
                     />
                   </div>
@@ -233,10 +307,51 @@ const EditingPage = () => {
 
           <input
             type="text"
+            name="color"
+            // placeholder="색상"
+            // value={formik.values.color}
+            // onChange={(e) => {
+            //   formik.handleChange(e);
+            //   setErrorMessage("");
+            // }}
+            placeholder="색상 (예: 빨강,파랑)"
+            value={formik.values.color.join(",")}
+            onChange={(e) => {
+              const arr = e.target.value.split(",").map((c) => c.trim());
+              formik.setFieldValue("color", arr);
+              setErrorMessage("");
+            }}
+          />
+
+          <input
+            type="text"
+            name="size"
+            // placeholder="사이즈"
+            // value={formik.values.size}
+            // onChange={(e) => {
+            //   formik.handleChange(e);
+            //   setErrorMessage("");
+            // }}
+            placeholder="사이즈 (예: S,M,L)"
+            value={formik.values.size.join(",")}
+            onChange={(e) => {
+              const arr = e.target.value.split(",").map((s) => s.trim());
+              formik.setFieldValue("size", arr);
+              setErrorMessage("");
+            }}
+          />
+
+          {/* <input
+            type="text"
             name="content"
             placeholder="내용"
             value={formik.values.content}
             onChange={formik.handleChange}
+          /> */}
+
+          <Editor
+            value={formik.values.content}
+            onChange={(html: string) => formik.setFieldValue("content", html)}
           />
           <button
             type="submit"

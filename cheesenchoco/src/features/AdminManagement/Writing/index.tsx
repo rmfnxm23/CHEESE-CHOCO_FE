@@ -157,7 +157,10 @@ const WritingPage = () => {
           />
 
           {/* 이미지 미리보기 */}
-          <div className="image-preview-wrapper">
+          <div
+            className="image-preview-wrapper"
+            style={{ display: previewImages.length > 0 ? "flex" : "none" }}
+          >
             {previewImages.map((src, index) => (
               <img key={index} src={src} alt={`미리보기-${index}`} />
             ))}
