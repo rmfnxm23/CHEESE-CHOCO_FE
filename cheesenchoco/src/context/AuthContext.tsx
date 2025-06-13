@@ -8,11 +8,13 @@ interface User {
   email: string;
   name: string;
   phone: string;
+  userType: string; // "admin" or "user"
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (userData: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
@@ -21,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
   const router = useRouter();
 
   const isAuthenticated = !!user;
@@ -38,10 +41,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => {
           console.log(res.data.user);
           setUser(res.data.user);
+          setIsLoading(false);
         })
         .catch(() => {
           logout(); // 만료된 경우 로그아웃
+          setIsLoading(false);
         });
+      // .finally(() => {
+      //   setIsLoading(false); // 완료되면 로딩 종료
+      // });
+    } else {
+      setIsLoading(false); // 토큰 없음 → 로딩 종료
     }
   }, []);
 
@@ -62,7 +72,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,8 @@
+import AuthGate from "@/components/AuthGate";
+import Footer from "@/components/Footer";
+import Layout from "@/components/FooterFixLayout";
 import Header from "@/components/Header";
+import PrivateRoute from "@/components/PrivateRoute";
 import { AuthProvider } from "@/context/AuthContext";
 import AdminHeader from "@/features/AdminHead";
 import Template from "@/features/layouts/Template";
@@ -15,11 +19,18 @@ export default function App({ Component, pageProps }: AppProps) {
   // const noHeaderFooter = ["Admin", "Login", "Join"]; // 대문자 표시
 
   // console.log(Component.name);
-  const isExlcluded = noHeaderFooter.some((path) =>
+  const isExcluded = noHeaderFooter.some((path) =>
     router.pathname.startsWith(path)
   );
 
   const isAdmin = router.pathname.startsWith("/admin");
+
+  const authRequiredRoutes = ["/mypage", "/cart?step=2", "/cart?step=3"]; // 로그인 필요한 경로들
+
+  // 로그인 필요 여부 체크 (경로가 포함되는지 확인)
+  const requiresAuth = authRequiredRoutes.some((route) =>
+    router.pathname.startsWith(route)
+  );
 
   return (
     <>
@@ -27,19 +38,42 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* {!noHeaderFooter.includes(Component.name) && <Header />} */}
       {/* {!isExlcluded && <Header />} */}
       <AuthProvider>
-        <Head>
+        {/* <Head>
           <title>{isAdmin && "CHEESE&CHOCO"}</title>
         </Head>
+        {isAdmin && (
+  <Head>
+    <title>CHEESE&CHOCO</title>
+  </Head>
+)} */}
 
         {isAdmin ? (
           <>
-            <AdminHeader />
-            <Template>
-              <Component {...pageProps} />
-            </Template>
+            <AuthGate requiredRole="admin">
+              <AdminHeader />
+              <Template>
+                <Component {...pageProps} />
+              </Template>
+            </AuthGate>
           </>
         ) : (
-          <Component {...pageProps} />
+          // <Layout showFooter={!isExcluded}>
+          //   <Component {...pageProps} />
+          //   {/* {!isExcluded && <Footer />} */}
+          // </Layout>
+          <>
+            {/* {!isExcluded && <Header />} */}
+            <Layout showFooter={!isExcluded}>
+              {requiresAuth ? (
+                <PrivateRoute>
+                  <Component {...pageProps} />
+                </PrivateRoute>
+              ) : (
+                <Component {...pageProps} />
+              )}
+              {/* {!isExcluded && <Footer />} */}
+            </Layout>
+          </>
         )}
       </AuthProvider>
     </>
