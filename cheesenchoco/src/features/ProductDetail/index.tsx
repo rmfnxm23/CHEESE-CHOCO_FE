@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import clsx from "clsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { CustomModal, ProductDetailStyled } from "./styled";
+
+import clsx from "clsx";
+import { CustomDrawer, CustomModal, ProductDetailStyled } from "./styled";
 import Header from "@/components/Header";
 import { formatPrice } from "@/util/validation";
 import { useAuth } from "@/context/AuthContext";
@@ -18,6 +19,7 @@ import DOMPurify from "dompurify";
 
 import Image from "next/image";
 import remove from "@/assets/images/remove.png";
+import { DrawerProps, RadioChangeEvent } from "antd";
 interface productProps {
   id: number;
   name: string;
@@ -49,6 +51,9 @@ const ProductDetail = () => {
   >([]);
 
   const [totalPrice, setTotalPrice] = useState("");
+
+  const [openColor, setOpenColor] = useState(false);
+  const [openSize, setOpenSize] = useState(false);
 
   useEffect(() => {
     const getUpdateItem = async (id: any) => {
@@ -91,7 +96,7 @@ const ProductDetail = () => {
         selectColor: opt.color,
         selectSize: opt.size,
         quantity: opt.quantity,
-        price: opt.price, // optional
+        price: opt.price,
       })),
     };
 
@@ -141,32 +146,87 @@ const ProductDetail = () => {
     setSelectedOptions((prev) => [...prev, newOption]);
   };
 
-  // 선택된 상품을 자동 추가
+  // // useRef로 항상 최신 값을 관리해서 중복확인.
+  // const selectedOptionsRef = useRef(selectedOptions);
+
+  // useEffect(() => {
+  //   selectedOptionsRef.current = selectedOptions;
+  // }, [selectedOptions]);
+
+  // // 선택된 상품을 자동 추가
+  // useEffect(() => {
+  //   if (!selectedColor || !selectedSize || !product) return;
+  //   // if (!selectedOptions) return;
+
+  //   const isDuplicate = selectedOptions.some(
+  //     (opt) => opt.color === selectedColor && opt.size === selectedSize
+  //   );
+
+  //   // if (!isDuplicate) {
+  //   //   setSelectedOptions((prev) => [
+  //   //     ...prev,
+  //   //     {
+  //   //       color: selectedColor,
+  //   //       size: selectedSize,
+  //   //       price: product.price,
+  //   //       quantity: 1, // 초기 수량 1로 추가
+  //   //     },
+  //   //   ]);
+  //   // }
+  //   if (!isDuplicate) {
+  //     const newOption = {
+  //       color: selectedColor,
+  //       size: selectedSize,
+  //       price: product.price,
+  //       quantity: 1,
+  //     };
+  //     setSelectedOptions((prev) => [...prev, newOption]);
+  //   }
+
+  //   console.log(selectedOptions, "수량 있니");
+
+  //   // ✅ 선택 후 select 초기화
+  //   setSelectedColor("");
+  //   setSelectedSize("");
+  // }, [selectedColor, selectedSize]);
+  const selectedOptionsRef = useRef(selectedOptions);
+
+  // 항상 최신 selectedOptions를 ref에 반영
+  useEffect(() => {
+    console.log(selectedColor, selectedSize, selectedOptionsRef.current);
+    selectedOptionsRef.current = selectedOptions;
+  }, [selectedOptions]);
+
   useEffect(() => {
     if (!selectedColor || !selectedSize || !product) return;
-    if (!selectedOptions) return;
 
-    const isDuplicate = selectedOptions.some(
+    const isDuplicate = selectedOptionsRef.current.some(
       (opt) => opt.color === selectedColor && opt.size === selectedSize
     );
 
-    if (!isDuplicate) {
-      setSelectedOptions((prev) => [
-        ...prev,
-        {
-          color: selectedColor,
-          size: selectedSize,
-          price: product.price,
-          quantity: 1, // 초기 수량 1로 추가
-        },
-      ]);
+    if (isDuplicate) {
+      alert("이미 선택한 옵션입니다.");
+    } else {
+      const newOption = {
+        color: selectedColor,
+        size: selectedSize,
+        price: product.price,
+        quantity: 1,
+      };
+      setSelectedOptions((prev) => [...prev, newOption]);
     }
 
-    console.log(selectedOptions, "수량 있니");
-    // ✅ 선택 후 select 초기화
+    // ✅ 선택 후 select 초기화는 항상 실행
     setSelectedColor("");
     setSelectedSize("");
-  }, [selectedColor, selectedSize]);
+  }, [selectedColor, selectedSize, product]);
+
+  // 옵션 선택 후 자동 추가 목록 삭제
+  const handleRemoveOption = (index: number) => {
+    setSelectedOptions((prevOptions) =>
+      prevOptions.filter((_, i) => i !== index)
+    );
+  };
 
   // 총 가격 계산
   useEffect(() => {
@@ -177,15 +237,94 @@ const ProductDetail = () => {
     setTotalPrice(formatPrice(total));
   }, [selectedOptions]);
 
+  // 드로어
+  const [placement, setPlacement] =
+    useState<DrawerProps["placement"]>("bottom");
+  const [drawerOpened, setDrawerOpened] = useState(false); // 드로어 오픈 여부
+  // const [windowWidth, setWindowWidth] = useState(0);
+
+  // useEffect(() => {
+  //   // 브라우저 환경에서만 실행됨
+  //   function handleResize() {
+  //     setWindowWidth(window.innerWidth);
+  //   }
+  //   handleResize(); // 최초 한번 호출해서 초기값 세팅
+  //   window.addEventListener("resize", handleResize);
+
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
+
+  // // windowWidth가 0일 땐 아직 초기화 안 된 상태이므로 로딩 처리 가능
+  // if (windowWidth === 0) return null;
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 700 && drawerOpened) {
+        setDrawerOpened(false); // 상태도 닫아줘야 실제 DOM에서도 사라짐
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // 초기 호출
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [drawerOpened]);
+
+  const handleCartClick = () => {
+    if (!drawerOpened) {
+      showDrawer();
+      setDrawerOpened(true);
+      return; // ✅ 처음엔 드로어만 열고 종료
+    }
+
+    if (selectedOptions.length === 0) {
+      alert("옵션을 선택해주세요.");
+      return;
+    }
+
+    handleCart(id);
+    setIsModalOpen(true); // ✅ 장바구니 담김 모달
+  };
+
+  const handleBuyClick = () => {
+    if (!drawerOpened) {
+      showDrawer();
+      setDrawerOpened(true);
+      return;
+    }
+
+    if (selectedOptions.length === 0) {
+      alert("옵션을 선택해주세요.");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      router.push("/login");
+    } else {
+      handleCart(id);
+      setIsModalOpen(true);
+      router.push("/order"); // ✅ 주문 페이지로 이동
+    }
+  };
+
+  const showDrawer = () => {
+    setDrawerOpened(true);
+  };
+
+  const onChange = (e: RadioChangeEvent) => {
+    setPlacement(e.target.value);
+  };
+
+  const onClose = () => {
+    setDrawerOpened(false);
+  };
+
   return (
     <>
       <Header />
+      {/* <div>현재 창 너비: {windowWidth}px</div> */}
       {product && (
         <div>
-          <ProductDetailStyled
-            className={clsx("detail-wrap")}
-            style={{ borderTop: "1px solid #aaa" }}
-          >
+          <ProductDetailStyled className={clsx("detail-wrap")}>
             <div className="detail-container">
               <div className="detail-Image">
                 <div className="img-wrap">
@@ -200,11 +339,17 @@ const ProductDetail = () => {
                   >
                     {existingImages.map((src, index) => (
                       <SwiperSlide key={`existing-${index}`}>
-                        <img
+                        {/* <img
                           src={`${BASE_URL}/uploads/product/${src}`}
                           alt={`기존 이미지-${index}`}
-                          style={{ width: "100%", height: "auto" }}
-                        />
+                          // style={{ width: "100%", height: "auto" }}
+                        /> */}
+                        <div className="slide-img-box">
+                          <img
+                            src={`${BASE_URL}/uploads/product/${src}`}
+                            alt={`기존 이미지-${index}`}
+                          />
+                        </div>
                       </SwiperSlide>
                     ))}
                   </Swiper>
@@ -284,7 +429,11 @@ const ProductDetail = () => {
                             <div>{opt.quantity}</div>
                             <div>{formatPrice(opt.price)} 원</div>
                             <div className="add-product-cancel">
-                              <Image src={remove} alt="상품 추가 삭제" />
+                              <Image
+                                src={remove}
+                                alt="상품 추가 삭제"
+                                onClick={() => handleRemoveOption(idx)}
+                              />
                             </div>
                           </div>
                         </li>
@@ -302,7 +451,10 @@ const ProductDetail = () => {
                     <div
                       className="action-cart"
                       onClick={() => {
-                        if (selectedOptions) {
+                        if (
+                          Array.isArray(selectedOptions) &&
+                          selectedOptions.length > 0
+                        ) {
                           handleCart(id);
                           setIsModalOpen(true);
                         } else {
@@ -341,9 +493,13 @@ const ProductDetail = () => {
                     <div
                       className="action-buy"
                       onClick={() => {
-                        isAuthenticated
-                          ? router.push("/cart")
-                          : router.push("/login");
+                        if (selectedOptions.length > 0) {
+                          isAuthenticated
+                            ? router.push("/cart")
+                            : router.push("/login");
+                        } else {
+                          addSelectedOption(); // 또는 옵션 선택 안내 메시지
+                        }
                       }}
                     >
                       BUY NOW
@@ -352,6 +508,235 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
+            {/* 800px 이하에서만 보이는 하단 고정 버튼 */}
+            <div className="bottom-fixed-buttons">
+              <div
+                className="action-cart"
+                // onClick={() => {
+                //   showDrawer(); // 무조건 먼저 실행
+
+                //   if (selectedOptions.length > 0) {
+                //     handleCart(id);
+                //     setIsModalOpen(true);
+                //   } else {
+                //     alert("옵션을 선택해주세요.");
+                //   }
+                // }}
+                onClick={handleCartClick}
+              >
+                CART
+              </div>
+              <div
+                className="action-buy"
+                // onClick={() => {
+                //   showDrawer(); // 무조건 먼저 실행
+
+                //   if (!isAuthenticated) {
+                //     router.push("/login");
+                //     return;
+                //   }
+
+                //   if (selectedOptions.length > 0) {
+                //     handleCart(id);
+                //     setIsModalOpen(true);
+                //   } else {
+                //     alert("옵션을 선택해주세요.");
+                //   }
+                // }}
+                onClick={handleBuyClick}
+              >
+                BUY NOW
+              </div>
+            </div>
+
+            {/* 업 슬라이스 -옵션 선택 창 */}
+            {/* <CustomDrawer
+              // title="Drawer with extra actions"
+              placement={placement}
+              // placement="bottom"
+              width={500}
+              onClose={onClose}
+              open={open}
+           
+            > */}
+            <CustomDrawer
+              placement="bottom"
+              width={500}
+              onClose={onClose}
+              open={drawerOpened}
+              closable={false} // X 버튼 제거
+              title={null} // 제목 제거
+              // headerStyle={{ padding: 0 }} // 헤더 패딩 제거
+            >
+              {/* 상단 핸들 바 */}
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "rgb(228, 228, 228)",
+                    width: "40px",
+                    height: "4px",
+                    borderRadius: "2px",
+                  }}
+                />
+              </div>
+
+              <div className="drawer-option">
+                {/* 색상 옵션 */}
+                <div className="product-option">
+                  {/* {existingColors.length >= 1 && (
+                    <select
+                      name="color"
+                      value={selectedColor}
+                      onChange={(e) => {
+                        setSelectedColor(e.target.value);
+                      }}
+                    >
+                      <option value="">color</option>
+                      {existingColors.map((x) => (
+                        <option value={x} key={x}>
+                          {x}
+                        </option>
+                      ))}
+                    </select>
+                  )} */}
+                  {existingColors.length >= 1 && (
+                    <div className="custom-select-wrapper">
+                      <div
+                        className="custom-select-box"
+                        onClick={() => {
+                          setOpenColor((prev) => !prev);
+                          setOpenSize(false); // 사이즈 드롭다운은 무조건 닫기
+                        }}
+                      >
+                        {selectedColor || "color"}
+                        <span className="arrow">{openColor ? "▲" : "▼"}</span>
+                      </div>
+
+                      {openColor && (
+                        <div className="custom-select-options">
+                          <div
+                            className="custom-option"
+                            onClick={() => {
+                              setSelectedColor("");
+                              setOpenColor(false);
+                            }}
+                          >
+                            color
+                          </div>
+                          {existingColors.map((x) => (
+                            <div
+                              key={x}
+                              className="custom-option"
+                              onClick={() => {
+                                setSelectedColor(x);
+                                setOpenColor(false);
+                              }}
+                            >
+                              {x}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 사이즈 옵션 */}
+                  {/* {existingSize.length >= 1 && (
+                    <select
+                      name="size"
+                      value={selectedSize}
+                      onChange={(e) => {
+                        setSelectedSize(e.target.value);
+                      }}
+                    >
+                      <option value="">size</option>
+                      {existingSize.map((x) => (
+                        <option value={x} key={x}>
+                          {x}
+                        </option>
+                      ))}
+                    </select>
+                  )} */}
+                  {existingSize.length >= 1 && (
+                    <div className="custom-select-wrapper">
+                      <div
+                        className="custom-select-box"
+                        onClick={() => {
+                          setOpenSize((prev) => !prev);
+                          setOpenColor(false); // 컬러 드롭다운은 무조건 닫기
+                        }}
+                      >
+                        {selectedSize || "size"}
+                        <span className="arrow">{openSize ? "▲" : "▼"}</span>
+                      </div>
+
+                      {openSize && (
+                        <div className="custom-select-options">
+                          <div
+                            className="custom-option"
+                            onClick={() => {
+                              setSelectedSize("");
+                              setOpenSize(false);
+                            }}
+                          >
+                            size
+                          </div>
+                          {existingSize.map((x) => (
+                            <div
+                              key={x}
+                              className="custom-option"
+                              onClick={() => {
+                                setSelectedSize(x);
+                                setOpenSize(false);
+                              }}
+                            >
+                              {x}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 선택된 상품 자동 추가 */}
+                <div
+                  className={clsx("selected-products", {
+                    active: selectedOptions.length > 0,
+                  })}
+                >
+                  <ul>
+                    {selectedOptions.map((opt, idx) => (
+                      <li key={idx}>
+                        <p>
+                          {opt.color} / {opt.size}
+                        </p>
+                        <div className="item-calculate">
+                          <div>{opt.quantity}</div>
+                          <div>{formatPrice(opt.price)} 원</div>
+                          <div className="add-product-cancel">
+                            <Image src={remove} alt="상품 추가 삭제" />
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* 선택된 상품 총 금액 */}
+                {selectedOptions.length > 0 && (
+                  <div className="total-price">{totalPrice} 원</div>
+                )}
+              </div>
+            </CustomDrawer>
           </ProductDetailStyled>
         </div>
       )}

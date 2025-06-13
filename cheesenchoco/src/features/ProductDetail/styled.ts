@@ -1,10 +1,11 @@
-import { Modal } from "antd";
+import { Drawer, Modal } from "antd";
 import styled from "styled-components";
 
 export const ProductDetailStyled = styled.div`
   margin-top: 100px;
   /* max-width: 1800px; */
   /* padding: 0 7%; */
+  border-top: 1px solid #aaa;
 
   .detail-container {
     max-width: 1800px;
@@ -19,7 +20,7 @@ export const ProductDetailStyled = styled.div`
 
     .detail-Image {
       width: 55%;
-      padding: 0;
+      padding: 0 20px;
       margin: 0;
 
       .img-wrap {
@@ -29,10 +30,46 @@ export const ProductDetailStyled = styled.div`
 
       .img-wrap img {
         width: 100%;
-        height: 100%;
+        height: auto;
         aspect-ratio: 1 / 1;
         object-fit: fill;
       }
+
+      /* .img-wrap {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+      } */
+      /* .img-wrap {
+        width: 100%;
+        margin-top: 20px;
+
+        .slide-img-box {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1 / 1; 
+          overflow: hidden;
+        }
+
+        .slide-img-box img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          top: 0;
+          left: 0;
+        }
+      } */
     }
 
     .swiper-button-prev,
@@ -48,6 +85,10 @@ export const ProductDetailStyled = styled.div`
 
     .product-content {
       margin-top: 20px;
+
+      img {
+        width: 100%;
+      }
     }
 
     /* .product-info {
@@ -66,7 +107,8 @@ export const ProductDetailStyled = styled.div`
 
     .product-info {
       width: 45%;
-      margin-left: 80px;
+      /* margin-left: 80px; */
+      margin: 0 4%;
       padding: 3% 0 0;
       box-sizing: border-box;
       /* position: relative; → ❌ 제거해야 sticky 정상작동 */
@@ -142,6 +184,10 @@ export const ProductDetailStyled = styled.div`
         justify-content: space-between;
       }
 
+      li ~ li {
+        border-top: 1px solid #f0f0f0;
+      }
+
       .item-calculate {
         display: flex;
         align-items: center;
@@ -182,6 +228,67 @@ export const ProductDetailStyled = styled.div`
         border-right: none;
       }
     }
+  } /* 하단 고정 버튼 */
+  /* 기본적으로 하단 고정 버튼 숨기기 */
+  .bottom-fixed-buttons {
+    display: none;
+  }
+
+  /* 800px 이하 화면에서 보이도록 */
+  @media screen and (max-width: 1200px) {
+    .action-cart,
+    .action-buy {
+      font-size: 80%;
+      padding: 10px 0px !important;
+    }
+  }
+
+  /* 800px 이하 화면에서 보이도록 */
+  @media screen and (max-width: 700px) {
+    .product-info {
+      display: none;
+      margin-left: 2rem;
+    }
+
+    .detail-container .detail-Image {
+      width: 100%;
+    }
+
+    .product-button {
+      display: none; /* 기존 버튼 숨김 */
+    }
+    .bottom-fixed-buttons {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #ddd;
+      /* padding: 10px; */
+      justify-content: space-around;
+      z-index: 9999;
+      box-shadow: 0 -2px 8px rgb(0 0 0 / 0.1);
+    }
+    .bottom-fixed-buttons > div {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 12px 0;
+      border-radius: 4px;
+    }
+    .bottom-fixed-buttons .action-cart {
+      /* background-color: #f0f0f0; */
+      margin-right: 8px;
+      padding: 20px 0;
+    }
+    .bottom-fixed-buttons .action-buy {
+      border-left: 1px solid #ddd;
+      padding: 20px 0;
+      /* background-color: #0070f3; */
+      /* color: white; */
+    }
   }
 `;
 
@@ -221,6 +328,123 @@ export const CustomModal = styled(Modal)`
       }
       .shop-btn {
         background-color: #000;
+      }
+    }
+  }
+`;
+
+export const CustomDrawer = styled(Drawer)`
+  .ant-drawer-body {
+    padding: 0 24px 24px 24px;
+  }
+
+  .drawer-option {
+    padding: 15px;
+
+    .product-option {
+      margin-bottom: 20px;
+
+      select {
+        padding: 10px;
+        width: 100%;
+      }
+
+      .custom-select-wrapper {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .custom-select-box {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .custom-select-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        z-index: 100;
+      }
+
+      .custom-option {
+        padding: 10px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+
+      .arrow {
+        font-size: 12px;
+        color: #999;
+      }
+    }
+
+    .selected-products {
+      background: #fafafa;
+      /* border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc; */
+      max-height: 240px;
+      overflow-y: auto;
+      /* margin-bottom: 10px; */
+
+      &.active {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+      }
+
+      li ~ li {
+        border-top: 1px solid #f0f0f0;
+      }
+
+      .item-calculate {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .total-price {
+      text-align: right;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: red;
+      border-top: 2px solid black;
+      padding-top: 10px;
+    }
+
+    .product-button {
+      display: flex;
+
+      .action-cart,
+      .action-buy {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        border: 1px solid #000;
+      }
+
+      .action-cart {
+        border-right: none;
       }
     }
   }
