@@ -7,6 +7,7 @@ interface User {
   id: number;
   email: string;
   name: string;
+  phone: string;
 }
 
 interface AuthContextType {
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (userData: User, accessToken: string, refreshToken: string) => {
     setUser(userData);
-    Cookies.set("accessToken", accessToken, { expires: 1 / 24 }); // 1시간
+    Cookies.set("accessToken", accessToken, { expires: 1 });
     Cookies.set("refreshToken", refreshToken, { expires: 1 }); // 1일
   };
 
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("refreshToken");
 
     alert("로그아웃 되었습니다.");
+    // window.location.reload(); // 강제 새로고침 (권장되진 않지만 확실)
     router.push("/");
   };
 
