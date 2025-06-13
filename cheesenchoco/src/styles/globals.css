@@ -58,3 +58,57 @@ body,
 .layout-content {
   flex: 1;
 }
+
+/* Header 내 Popover 커스터마이징 스타일 */
+/* Popover 배경, 그림자, 테두리 제거 */
+.custom-popover .ant-popover-inner {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Popover 내부 카테고리 리스트 스타일 */
+.category-list {
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+/* 카테고리 항목 스타일 및 hover 효과 */
+.category-item {
+  position: relative;
+  padding: 0.3rem 0;
+  cursor: pointer;
+}
+
+/* hover 시 밑줄 애니메이션 */
+.category-item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: black;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.category-item:hover::after {
+  transform: scaleX(1);
+}
+
+/* Popover 화살표 배경 및 그림자 제거 */
+.ant-popover .ant-popover-arrow::before {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ant-popover-arrow-content {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
