@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { OrdersStyled } from "./styled";
 import clsx from "clsx";
+import api from "@/lib/api";
 
 interface OrderProps {
   id: number;
@@ -34,15 +34,12 @@ const Orders = () => {
   useEffect(() => {
     const getOrderList = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/payment/orderList",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const response = await api.get("/payment/orderList", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        });
 
         console.log(response.data.data);
         if (response.data.data) {
@@ -95,7 +92,7 @@ const Orders = () => {
         //             {order.items.map((item) => (
         //               <div key={item.id} className="product">
         //                 <img
-        //                   src={`http://localhost:5000/uploads/product/${item.product.firstImage}`}
+        //                   src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.firstImage}`}
         //                   alt={item.product.name}
         //                   width={80}
         //                 />
@@ -148,7 +145,7 @@ const Orders = () => {
                     <div className="cell product-cell">
                       <div className="product">
                         <img
-                          src={`http://localhost:5000/uploads/product/${item.product.firstImage}`}
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.firstImage}`}
                           alt={item.product.name}
                           width={80}
                         />

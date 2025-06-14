@@ -1,8 +1,8 @@
 import { Button, Table } from "antd";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
+import api from "@/lib/api";
 
 interface productProps {
   id: number;
@@ -22,7 +22,7 @@ const AdminPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/admin/product");
+        const res = await api.get("/admin/product");
         console.log(res.data.data);
         const data = res.data.data;
 
@@ -44,9 +44,7 @@ const AdminPage = () => {
     console.log("id", id);
     confirm("삭제하시겠습니까?");
     try {
-      const res = await axios.delete(
-        `http://localhost:5000/admin/delete/${id}`
-      );
+      const res = await api.delete(`/admin/delete/${id}`);
 
       alert(res.data.message);
       // 삭제된 상품을 화면에서도 제거
@@ -68,7 +66,7 @@ const AdminPage = () => {
     tempDiv.innerHTML = DOMPurify.sanitize(html); // 안전하게 정화 후
     return tempDiv.textContent || "";
   };
-  const BASE_URL = "http://localhost:5000";
+
   const columns = [
     {
       title: "No.",
@@ -84,7 +82,7 @@ const AdminPage = () => {
           <img
             width={30}
             height={30}
-            src={`${BASE_URL}/uploads/product/${record.imgUrls[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${record.imgUrls[0]}`}
             alt={`기존 이미지-${record.id}`}
           />
         );

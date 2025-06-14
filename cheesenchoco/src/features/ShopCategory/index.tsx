@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { ShopCategoryStyled } from "./styled";
@@ -30,13 +30,11 @@ const ShopCategory = () => {
     const getProductCategory = async () => {
       try {
         if (category) {
-          const res = await axios.get(
-            `http://localhost:5000/admin/product?category=${category}`
-          );
+          const res = await api.get(`/admin/product?category=${category}`);
           setProducts(res.data.data);
           console.log(res.data.data, "categoryId 연결은 안되어있나..?");
         } else {
-          const res = await axios.get(`http://localhost:5000/admin/product`);
+          const res = await api.get(`/admin/product`);
           setProducts(res.data.data);
         }
       } catch (err) {
@@ -49,7 +47,7 @@ const ShopCategory = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/category");
+        const res = await api.get("/category");
         console.log(res.data.data);
         if (res.data.data) {
           setCategories(res.data.data);

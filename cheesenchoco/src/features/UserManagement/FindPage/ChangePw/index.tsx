@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ChangePwStyled } from "./styled";
 import clsx from "clsx";
 import { useFormik } from "formik";
-import axios from "axios";
+import api from "@/lib/api";
 import { passCheckValidation, passValidation } from "@/util/validation";
 
 const ChangePwPage = () => {
@@ -28,10 +28,7 @@ const ChangePwPage = () => {
     console.log(data);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/user/pwVerifyCode",
-        data
-      );
+      const res = await api.post("/user/pwVerifyCode", data);
 
       if (res.data.success === true) {
         setCertification(true);
@@ -56,10 +53,7 @@ const ChangePwPage = () => {
       };
 
       try {
-        const res = await axios.post(
-          "http://localhost:5000/user/change/pw",
-          data
-        );
+        const res = await api.post("/user/change/pw", data);
 
         if (res.data.success === true) {
           alert(res.data.message);

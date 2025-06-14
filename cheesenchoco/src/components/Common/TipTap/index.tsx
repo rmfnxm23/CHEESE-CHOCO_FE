@@ -5,10 +5,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { useEffect } from "react";
 import { TipTapStyled } from "./styled";
-import axios from "axios";
 import Paragraph from "@tiptap/extension-paragraph";
 
 import { Bold, Italic, Heading2, Image as ImageIcon } from "lucide-react";
+import api from "@/lib/api";
 
 interface EditorProps {
   value: string;
@@ -82,8 +82,8 @@ export default function Editor({ value, onChange }: EditorProps) {
       //   return;
       try {
         // 🔸 4-2. axios로 이미지 업로드 요청
-        const response = await axios.post(
-          `http://localhost:5000/admin/product/callbackImage`,
+        const response = await api.post(
+          `/admin/product/callbackImage`,
           formData,
           {
             headers: {

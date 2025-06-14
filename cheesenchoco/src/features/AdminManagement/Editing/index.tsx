@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -6,6 +5,7 @@ import { EditingStyled } from "./styled";
 import clsx from "clsx";
 
 import dynamic from "next/dynamic";
+import api from "@/lib/api";
 
 // TipTap 에디터 동적 import (SSR 방지)
 const Editor = dynamic(() => import("@/components/Common/TipTap"), {
@@ -48,9 +48,7 @@ const EditingPage = () => {
       if (!id) return;
 
       try {
-        const res = await axios.get(
-          `http://localhost:5000/admin/product/${id}`
-        );
+        const res = await api.get(`/admin/product/${id}`);
         // console.log(res.data.data.img);
         // console.log(res.data.data.imgUrls);
         const item = res.data.data;
@@ -72,7 +70,7 @@ const EditingPage = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/category");
+        const res = await api.get("/category");
         console.log(res.data.data);
         if (res.data.data) {
           setCategory(res.data.data);
@@ -155,13 +153,9 @@ const EditingPage = () => {
       formData.append("categoryId", String(categoryId));
 
       try {
-        const res = await axios.post(
-          `http://localhost:5000/admin/update/${id}`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        const res = await api.post(`/admin/update/${id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
         alert(res.data.message);
 
@@ -191,8 +185,6 @@ const EditingPage = () => {
       setPreviewImages(previewUrls);
     }
   };
-
-  const BASE_URL = "http://localhost:5000"; // 서버 주소
 
   return (
     <EditingStyled className={clsx("writing-wrap")}>
@@ -247,7 +239,7 @@ const EditingPage = () => {
             {existingImages.map((src, index) => (
               <div key={index} className="preview-box">
                 <img
-                  src={`${BASE_URL}/uploads/${src}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${src}`}
                   alt={`기존 이미지-${index}`}
                 />
               </div>
@@ -271,7 +263,7 @@ const EditingPage = () => {
               : existingImages.map((src, index) => (
                   <div key={`existing-${index}`} className="preview-box">
                     <img
-                      src={`${BASE_URL}/uploads/product/${src}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
                       alt={`기존 이미지-${index}`}
                     />
                   </div>

@@ -11,8 +11,9 @@ import {
   passValidation,
   phoneValidation,
 } from "@/util/validation";
-import axios from "axios";
 import { useRouter } from "next/router";
+import api from "@/lib/api";
+import { isAxiosError } from "axios";
 
 const JoinPage = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const JoinPage = () => {
         return;
       }
       console.log(email);
-      const res = await axios.post(`http://localhost:5000/user/check/email`, {
+      const res = await api.post(`/user/check/email`, {
         email,
       });
 
@@ -81,7 +82,7 @@ const JoinPage = () => {
         return;
       }
 
-      const res = await axios.post(`http://localhost:5000/user/check/phone`, {
+      const res = await api.post(`/user/check/phone`, {
         phone,
       });
 
@@ -126,19 +127,16 @@ const JoinPage = () => {
       console.log(emailDuplicate.boolean, phoneDuplicate.boolean);
 
       try {
-        const res = await axios.post(
-          "http://localhost:5000/user/register",
-          values
-        );
+        const res = await api.post("/user/register", values);
 
         if (res.status === 201) {
           alert(res.data.message);
           router.push("/login");
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error(err);
 
-        if (axios.isAxiosError(err)) {
+        if (isAxiosError(err)) {
           // axios 에러일 경우
           alert(err.response?.data?.error || "회원가입에 실패했습니다.");
         } else {

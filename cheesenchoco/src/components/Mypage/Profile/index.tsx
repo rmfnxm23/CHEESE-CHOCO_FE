@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { PassModal, ProfileStyled } from "./styled";
 import clsx from "clsx";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { App as AntdApp, Input, Modal, message } from "antd";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@/util/validation";
 import { useAuth } from "@/context/AuthContext";
 import Cookies from "js-cookie";
+import api from "@/lib/api";
 
 const Profile = () => {
   const router = useRouter();
@@ -60,7 +60,7 @@ const Profile = () => {
         return;
       }
 
-      const res = await axios.post(`http://localhost:5000/user/check/phone`, {
+      const res = await api.post(`/user/check/phone`, {
         phone,
       });
 
@@ -117,7 +117,7 @@ const Profile = () => {
         try {
           const accessToken = Cookies.get("accessToken");
 
-          const response = await axios.delete("http://localhost:5000/user/me", {
+          const response = await api.delete("/user/me", {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           if (response.status === 201) {
@@ -159,10 +159,7 @@ const Profile = () => {
       };
 
       try {
-        const res = await axios.put(
-          "http://localhost:5000/user/update/myInfo",
-          data
-        );
+        const res = await api.put("/user/update/myInfo", data);
 
         if (res.data.success === true) {
           alert(res.data.message);
@@ -195,10 +192,7 @@ const Profile = () => {
       };
 
       try {
-        const res = await axios.post(
-          "http://localhost:5000/user/change/pw",
-          data
-        );
+        const res = await api.post("/user/change/pw", data);
 
         if (res.data.success === true) {
           alert(res.data.message);

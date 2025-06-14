@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { formatPhone, formatPrice, phoneValidation } from "@/util/validation";
 import Image from "next/image";
 import ArrowDropDown from "@/assets/images/arrow_dropdown.png";
-import axios from "axios";
+import api from "@/lib/api";
 import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 interface CartProps {
@@ -246,15 +246,11 @@ export default function OrderInfo({
     console.log(shippingInfo);
     // return;
     try {
-      const res = await axios.post(
-        "http://localhost:5000/address/register",
-        shippingInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // 인증 필요시
-          },
-        }
-      );
+      const res = await api.post("/address/register", shippingInfo, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // 인증 필요시
+        },
+      });
 
       console.log("📦 배송지 저장 완료:", res.data);
       const shippingInfoId = res.data.data.id;
@@ -266,8 +262,8 @@ export default function OrderInfo({
       console.log(orderData, "선택한 상품인가, 나오기는 하는지");
 
       // 2. 결제(주문) 생성
-      const paymentRes = await axios.post(
-        "http://localhost:5000/payment/create",
+      const paymentRes = await api.post(
+        "/payment/create",
         {
           userId: user?.id,
           shippingInfoId,
@@ -281,8 +277,8 @@ export default function OrderInfo({
       console.log("주문(payment) ID:", paymentId);
 
       // 3. 주문 아이템 저장
-      const orderRes = await axios.post(
-        "http://localhost:5000/orderItem/save",
+      const orderRes = await api.post(
+        "/orderItem/save",
         {
           paymentId,
           items: selectedItems, // [{ productId, quantity, price }, ...]
@@ -469,7 +465,7 @@ export default function OrderInfo({
                   <div className="product-info">
                     <div className="product-left">
                       <img
-                        src={`http://localhost:5000/uploads/product/${imageUrl}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${imageUrl}`}
                         alt={item.product.name}
                         width={80}
                         height={80}

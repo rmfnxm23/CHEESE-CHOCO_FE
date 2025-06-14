@@ -2,7 +2,7 @@ import { formatPhone } from "@/util/validation";
 import { useFormik } from "formik";
 import { useState } from "react";
 import clsx from "clsx";
-import axios from "axios";
+import api from "@/lib/api";
 import { FindIdStyled } from "./styled";
 
 const FindIdPage = () => {
@@ -24,7 +24,7 @@ const FindIdPage = () => {
       }
 
       try {
-        const res = await axios.post("http://localhost:5000/user/find/id", {
+        const res = await api.post("/user/find/id", {
           phone,
         });
 

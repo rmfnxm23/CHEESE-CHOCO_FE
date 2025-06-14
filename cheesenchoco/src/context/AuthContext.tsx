@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import axios from "axios";
+import api from "@/lib/api";
 import { useRouter } from "next/router";
 
 interface User {
@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (accessToken && !user) {
       // (선택) 사용자 정보 요청
-      axios
-        .get("http://localhost:5000/user/me", {
+      api
+        .get("/user/me", {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((res) => {

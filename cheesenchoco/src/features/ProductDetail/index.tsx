@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/lib/api";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
@@ -20,6 +20,7 @@ import DOMPurify from "dompurify";
 import Image from "next/image";
 import remove from "@/assets/images/remove.png";
 import { DrawerProps, RadioChangeEvent } from "antd";
+
 interface productProps {
   id: number;
   name: string;
@@ -60,9 +61,7 @@ const ProductDetail = () => {
       if (!id) return;
 
       try {
-        const res = await axios.get(
-          `http://localhost:5000/admin/product/${id}`
-        );
+        const res = await api.get(`/admin/product/${id}`);
         const item = res.data.data;
         setProduct(item);
         setExistingImages(item.imgUrls || []);
@@ -74,7 +73,6 @@ const ProductDetail = () => {
     };
     getUpdateItem(id);
   }, [id]);
-  const BASE_URL = "http://localhost:5000";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -106,7 +104,7 @@ const ProductDetail = () => {
     try {
       const accessToken = Cookies.get("accessToken");
 
-      const res = await axios.post(`${BASE_URL}/cart/register`, data, {
+      const res = await api.post(`/cart/register`, data, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -340,13 +338,13 @@ const ProductDetail = () => {
                     {existingImages.map((src, index) => (
                       <SwiperSlide key={`existing-${index}`}>
                         {/* <img
-                          src={`${BASE_URL}/uploads/product/${src}`}
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
                           alt={`기존 이미지-${index}`}
                           // style={{ width: "100%", height: "auto" }}
                         /> */}
                         <div className="slide-img-box">
                           <img
-                            src={`${BASE_URL}/uploads/product/${src}`}
+                            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
                             alt={`기존 이미지-${index}`}
                           />
                         </div>

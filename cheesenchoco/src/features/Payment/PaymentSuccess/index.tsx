@@ -1,10 +1,10 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PaymentSuccessStyled } from "./styled";
 import clsx from "clsx";
 import { Button, Result, Spin } from "antd";
 import Cookies from "js-cookie";
+import api from "@/lib/api";
 
 const PaymentSuccess = () => {
   const router = useRouter();
@@ -42,8 +42,8 @@ const PaymentSuccess = () => {
           items: storedItems,
         });
 
-        const response = await axios.post(
-          "http://localhost:5000/payment/confirm",
+        const response = await api.post(
+          "/payment/confirm",
           {
             paymentKey,
             orderId,

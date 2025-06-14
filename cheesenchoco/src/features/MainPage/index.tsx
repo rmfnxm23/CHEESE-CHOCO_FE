@@ -14,7 +14,7 @@ import type { Swiper as SwiperClass } from "swiper";
 import Header from "@/components/Header";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "@/lib/api";
 
 import { MainpageStyled } from "./styled";
 import clsx from "clsx";
@@ -48,14 +48,14 @@ const MainPage = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        // const res = await axios.get("http://localhost:5000/admin/product");
-        let url = "http://localhost:5000/admin/product";
+        // const res = await api.get("/admin/product");
+        let url = `${process.env.NEXT_PUBLIC_API_URL}/admin/product`;
         if (router.pathname === "/") {
           url += "?limit=4&sort=desc"; // 홈일 때만 4개만 요청
         }
         console.log("요청 URL:", url);
 
-        const res = await axios.get(url);
+        const res = await api.get(url);
         if (res.data.data) {
           console.log(res.data.data);
           setProducts(res.data.data);

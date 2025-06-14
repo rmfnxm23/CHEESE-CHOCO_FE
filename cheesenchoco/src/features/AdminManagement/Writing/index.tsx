@@ -1,6 +1,3 @@
-"use client";
-
-import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { WritingStyled } from "./styled";
@@ -8,6 +5,7 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 
 import dynamic from "next/dynamic";
+import api from "@/lib/api";
 
 // TipTap 에디터 동적 import (SSR 방지)
 const Editor = dynamic(() => import("@/components/Common/TipTap"), {
@@ -23,13 +21,11 @@ const WritingPage = () => {
 
   // const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ ref 선언
 
-  const BASE_URL = "http://localhost:5000";
-
   // 카테고리 데이터 가져오기
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/category`);
+        const res = await api.get(`/category`);
         console.log(res.data.data);
         if (res.data.data) {
           setCategories(res.data.data);
@@ -95,13 +91,9 @@ const WritingPage = () => {
       formData.append("categoryId", categoryId);
 
       try {
-        const res = await axios.post(
-          `${BASE_URL}/admin/product/register`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        const res = await api.post(`/admin/product/register`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
         alert(res.data.message);
 

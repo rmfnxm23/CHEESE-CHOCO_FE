@@ -7,7 +7,7 @@ import orderStep from "@/assets/images/order_step.png";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import Cookies from "js-cookie";
-import axios from "axios";
+import api from "@/lib/api";
 
 import { formatPrice } from "@/util/validation";
 
@@ -17,6 +17,7 @@ import OrderConfirm from "./OrderConfirm";
 import { ParsedUrlQuery } from "querystring";
 
 import { useIsMobile } from "@/hooks/useIsMobile";
+
 interface CartProps {
   id: number;
   selectColor: string;
@@ -157,7 +158,7 @@ const CartPage = () => {
     if (!user) return;
     const fetchCart = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/cart/myCart", {
+        const res = await api.get("/cart/myCart", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (res.data.data) {
@@ -214,7 +215,7 @@ const CartPage = () => {
   const handleDelete = async (id: number) => {
     if (!confirm("상품을 장바구니에서 삭제하시겠습니까?")) return;
     try {
-      await axios.delete(`http://localhost:5000/cart/${id}`, {
+      await api.delete(`/cart/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setCartList((prev) => prev.filter((item) => item.id !== id));
@@ -229,7 +230,7 @@ const CartPage = () => {
     try {
       await Promise.all(
         checkedItems.map((id) =>
-          axios.delete(`http://localhost:5000/cart/${id}`, {
+          api.delete(`/cart/${id}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           })
         )
@@ -371,7 +372,7 @@ const CartPage = () => {
                   //               <div className="product-info">
                   //                 <div className="product-left">
                   //                   {/* <img
-                  //                     src={`http://localhost:5000/uploads/product/${imageArray}`}
+                  //                     src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${imageArray}`}
                   //                     alt={item.product.name}
                   //                     width={80}
                   //                     height={80}
@@ -379,7 +380,7 @@ const CartPage = () => {
                   //                   {item.product?.img &&
                   //                     Array.isArray(item.product.img) && (
                   //                       <img
-                  //                         src={`http://localhost:5000/uploads/product/${item.product.img[0]}`}
+                  //                         src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
                   //                         alt={item.product.name || "상품 이미지"}
                   //                         width={80}
                   //                         height={80}
@@ -457,7 +458,7 @@ const CartPage = () => {
 
                   //       <div className="mobile-cart-body">
                   //         <img
-                  //           src={`http://localhost:5000/uploads/product/${item.product.img[0]}`}
+                  //           src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
                   //           alt={item.product.name}
                   //           width={80}
                   //           height={80}
@@ -523,7 +524,7 @@ const CartPage = () => {
 
                             <div className="mobile-cart-body">
                               <img
-                                src={`http://localhost:5000/uploads/product/${item.product.img[0]}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
                                 alt={item.product.name}
                                 width={80}
                                 height={80}
@@ -590,7 +591,7 @@ const CartPage = () => {
                                   {item.product?.img &&
                                     Array.isArray(item.product.img) && (
                                       <img
-                                        src={`http://localhost:5000/uploads/product/${item.product.img[0]}`}
+                                        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
                                         alt={item.product.name || "상품 이미지"}
                                         width={80}
                                         height={80}

@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { DetailPageStyled } from "./styled";
+import api from "@/lib/api";
 
 interface productProps {
   id: number;
@@ -30,9 +30,7 @@ const DetailPage = () => {
 
     const getUpdateItem = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/admin/product/${id}`
-        );
+        const res = await api.get(`/admin/product/${id}`);
         const item = res.data.data;
 
         setProduct(item);
@@ -45,8 +43,6 @@ const DetailPage = () => {
 
     getUpdateItem();
   }, [id]);
-
-  const BASE_URL = "http://localhost:5000";
 
   if (!product) return <div>로딩 중...</div>;
 
@@ -71,7 +67,7 @@ const DetailPage = () => {
             {existingImages.map((src, idx) => (
               <div key={idx} className="img-box">
                 <img
-                  src={`${BASE_URL}/uploads/product/${src}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
                   alt={`상품 이미지 ${idx + 1}`}
                 />
               </div>

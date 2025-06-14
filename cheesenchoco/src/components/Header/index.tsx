@@ -3,8 +3,8 @@ import { HeaderStyled } from "./styled";
 import clsx from "clsx";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { Popover } from "antd";
+import api from "@/lib/api";
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -37,7 +37,7 @@ const Header = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/category");
+        const res = await api.get("/category");
         console.log(res.data.data);
         if (res.data.data) {
           setCategory(res.data.data);

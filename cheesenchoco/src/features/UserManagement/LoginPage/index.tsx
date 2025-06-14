@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -6,6 +5,7 @@ import { LoginPageStyled } from "./styled";
 import clsx from "clsx";
 import Cookies from "js-cookie";
 import { useAuth } from "@/context/AuthContext";
+import api from "@/lib/api";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const LoginPage = () => {
           return setLoginError("아이디 또는 비밀번호를 입력해주세요.");
         }
 
-        const res = await axios.post("http://localhost:5000/user/login", data, {
+        const res = await api.post("/user/login", data, {
           //   withCredentials: true, // 요청에 자동으로 쿠키가 담겨서 보냄. 또한, 서버로부터 오는 쿠키를 받기 위해서도 이 설정은 꼭 필요! (서버에서도 credentials 설정 필요)
           withCredentials: true,
           headers: {
