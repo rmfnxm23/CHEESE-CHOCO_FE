@@ -37,6 +37,12 @@ export const MainpageStyled = styled.div`
     .slick {
       margin: 0 10px;
       list-style: none;
+      opacity: 0.6;
+      cursor: pointer;
+
+      &.active {
+        opacity: 1;
+      }
     }
 
     .main-shop-now {

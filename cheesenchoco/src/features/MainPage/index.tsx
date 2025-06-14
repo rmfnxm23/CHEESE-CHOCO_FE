@@ -8,7 +8,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
+import type { Swiper as SwiperClass } from "swiper";
 
 import Header from "@/components/Header";
 import { useEffect, useRef, useState } from "react";
@@ -30,13 +31,19 @@ interface productProps {
 }
 
 const MainPage = () => {
-  const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
 
-  const [products, setProducts] = useState<[]>([]);
+  // const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperClass | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0); // 현재 슬라이드 인덱스 관리
 
-  // const scrollRef = useRef();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [products, setProducts] = useState<productProps[]>([]);
+
+  // 배너 데이터(이미지 + 텍스트) 배열 객체로 관리
+  const banners = [
+    { image: banner1, label: "PROMOTHIN 01" },
+    { image: banner2, label: "PROMOTHIN 02" },
+  ];
 
   useEffect(() => {
     const getProduct = async () => {
@@ -76,23 +83,43 @@ const MainPage = () => {
               slidesPerView={1}
               loop
               autoplay={{ delay: 5000 }}
+              onSwiper={(swiper) => (swiperRef.current = swiper)}
+              onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             >
-              <SwiperSlide>
+              {/* <SwiperSlide>
                 <Image src={banner1} alt="banner" className="banner" />
               </SwiperSlide>
               <SwiperSlide>
                 <Image src={banner2} alt="banner" className="banner" />
-              </SwiperSlide>
+              </SwiperSlide> */}
+              {banners.map((banner, idx) => (
+                <SwiperSlide key={`${banner.label}-${idx}`}>
+                  <Image
+                    src={banner.image}
+                    alt={`banner ${idx + 1}`}
+                    className="banner"
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
           <div>
             <ul className="slick-dots">
-              <li className="slick">
+              {/* <li className="slick">
                 <span>PROMOTHIN 01</span>
               </li>
               <li className="slick">
                 <span>PROMOTHIN 02</span>
-              </li>
+              </li> */}
+              {banners.map((banner, idx) => (
+                <li
+                  key={idx}
+                  className={clsx("slick", { active: activeIndex === idx })}
+                  onClick={() => swiperRef.current?.slideToLoop(idx)}
+                >
+                  <span>{banner.label}</span>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="main-shop-now">
