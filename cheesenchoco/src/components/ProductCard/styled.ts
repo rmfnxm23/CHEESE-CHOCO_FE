@@ -38,11 +38,12 @@ export const ProductCardStyled = styled.div`
     gap: 20px;
 
     .product-name {
-      width: 80%;
+      width: 70%;
     }
 
     .product-price {
-      width: 20%;
+      width: 30%;
+      text-align: end;
     }
   }
 `;

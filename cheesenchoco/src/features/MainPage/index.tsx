@@ -48,8 +48,8 @@ const MainPage = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        // const res = await api.get("/admin/product");
-        let url = `${process.env.NEXT_PUBLIC_API_URL}/admin/product`;
+        // const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/admin/product`);
+        let url = `/admin/product`;
         if (router.pathname === "/") {
           url += "?limit=4&sort=desc"; // 홈일 때만 4개만 요청
         }

@@ -66,46 +66,61 @@ export const HeaderStyled = styled.div`
     }
   }
 
-  /* Popover 내부 스타일 */
-  .category-list {
-    margin: 0;
-    padding: 0.5rem;
-    list-style: none;
-  }
-
-  .category-item {
-    position: relative;
-    padding: 0.3rem 0;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .category-item::after {
-    content: "";
-    position: absolute;
-    top: 50%;
+  /* 검색창 */
+  .search-box {
+    position: fixed;
+    top: 0;
     left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #000;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s ease;
-  }
+    bottom: 0; // 이거 추가!
+    width: 100%;
+    height: 33vh;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
-  .category-item:hover::after {
-    transform: scaleX(1);
-  }
+    .input-group {
+      position: relative;
+      width: 80%;
+      max-width: 500px;
 
-  .custom-popover .ant-popover-inner {
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0;
-  }
+      input {
+        width: 100%;
+        padding: 1rem 4rem 1rem 1rem; // 오른쪽에 버튼 들어갈 공간 확보
+        font-size: 1rem;
+        border: none;
+        border-bottom: 1px solid gray;
+        background: transparent;
 
-  .popover-trigger {
-    cursor: pointer;
-    position: relative;
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .search-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #333;
+      }
+    }
+
+    .close-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
+      background: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
   }
 `;

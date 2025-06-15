@@ -34,6 +34,9 @@ const Header = () => {
   const [category, setCategory] = useState([]);
   const [showCategory, setShowCategory] = useState(false);
 
+  const [showSearchBox, setShowSearchBox] = useState(false); // 검색창 활성화 여부
+  const [keyword, setKeyword] = useState(""); // 검색 키워드 값 관리
+
   useEffect(() => {
     const getCategory = async () => {
       try {
@@ -108,7 +111,8 @@ const Header = () => {
           setShowCategory(false);
         }}
       >
-        ALL
+        {/* ALL */}
+        <span className="category-text">ALL</span>
       </li>
       {/* <li
         className="category-item"
@@ -118,7 +122,7 @@ const Header = () => {
           setShowCategory(false);
         }}
       >
-        NEW
+          <span className="category-text">NEW</span>
       </li> */}
       {category?.map((item: any) => (
         <li
@@ -130,11 +134,20 @@ const Header = () => {
             setShowCategory(false); // 이동 후 팝업 닫기
           }}
         >
-          {item.category}
+          <span className="category-text">{item.category}</span>
         </li>
       ))}
     </ul>
   );
+
+  // 검색 핸들러
+  const handleSearch = () => {
+    const trimmed = keyword.trim();
+    if (trimmed) {
+      router.push(`/search?keyword=${encodeURIComponent(trimmed)}`);
+      setShowSearchBox(false);
+    }
+  };
 
   return (
     <HeaderStyled
@@ -155,8 +168,11 @@ const Header = () => {
             onOpenChange={(show: boolean) => {
               setShowCategory(show);
             }}
-            overlayClassName="custom-popover"
+            overlayClassName={
+              isMainPage ? "custom-popover main-page" : "custom-popover"
+            }
             // placement="bottomLeft"
+            overlayStyle={{ top: 60, left: 23 }}
           >
             <div className="popover-trigger" style={{ cursor: "pointer" }}>
               SHOP
@@ -177,7 +193,13 @@ const Header = () => {
           </div>
         </div>
         <div className="header-right">
-          <div>검색</div>
+          <div
+            onClick={() => {
+              setShowSearchBox(!showSearchBox);
+            }}
+          >
+            검색
+          </div>
           <div
             onClick={() => {
               router.push("/mypage/orders");
@@ -195,13 +217,11 @@ const Header = () => {
           <div>
             {isAuthenticated ? (
               <>
-                {/* <p>{user?.name}님</p> */}
                 <div onClick={logout}>로그아웃</div>
               </>
             ) : (
               <p
                 onClick={() => {
-                  // alert("토큰이 만료되었습니다");
                   router.push("/login");
                 }}
               >
@@ -210,6 +230,33 @@ const Header = () => {
             )}
           </div>
         </div>
+
+        {/* 검색 창 */}
+        {showSearchBox && (
+          <div className="search-box">
+            <div className="input-group">
+              <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+              <button onClick={handleSearch} className="search-btn">
+                검색
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowSearchBox(false);
+              }}
+              className="close-btn"
+            >
+              닫기
+            </button>
+          </div>
+        )}
       </>
       {/* )} */}
     </HeaderStyled>
