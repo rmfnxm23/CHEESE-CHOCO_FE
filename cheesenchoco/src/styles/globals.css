@@ -66,6 +66,13 @@ body,
   box-shadow: none !important;
   border: none !important;
   padding: 0 !important;
+  border-radius: 0;
+}
+
+.custom-popover {
+  color: black; /* 기본 검정 */
+  background: white;
+  /* 기타 기본 스타일 */
 }
 
 /* Popover 내부 카테고리 리스트 스타일 */
@@ -73,6 +80,7 @@ body,
   margin: 0;
   padding: 0.5rem;
   list-style: none;
+  width: 100px;
 }
 
 /* 카테고리 항목 스타일 및 hover 효과 */
@@ -82,22 +90,41 @@ body,
   cursor: pointer;
 }
 
+/* span에 밑줄 애니메이션 */
+.category-text {
+  position: relative;
+  display: inline-block; /* 텍스트 길이에 맞게 */
+}
+
 /* hover 시 밑줄 애니메이션 */
-.category-item::after {
+.category-text {
+  position: relative;
+  display: inline-block; /* 텍스트 길이만큼 너비 */
+  cursor: pointer;
+}
+
+.category-text::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
+  bottom: 0;
   height: 1px;
+  width: 100%;
   background-color: black;
   transform: scaleX(0);
-  transform-origin: center;
+  transform-origin: left;
   transition: transform 0.3s ease;
 }
 
-.category-item:hover::after {
+.category-text:hover::after {
   transform: scaleX(1);
+}
+
+.ant-popover {
+  top: 100;
+  left: 100;
 }
 
 /* Popover 화살표 배경 및 그림자 제거 */
@@ -111,4 +138,26 @@ body,
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
+}
+
+/* shopCategory 페이지일 때만 Popover 배경 적용 */
+body.shop-category-page .custom-popover .ant-popover-inner {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(4px); /* 선택: 뒷배경 흐림 효과 */
+}
+
+/* Main 페이지일 때만 Popover 배경 적용 */
+.custom-popover.main-page {
+  color: white; /* 메인페이지일 때 글씨 흰색 */
+  background: transparent; /* 필요시 */
+}
+
+/* 필요시 팝오버 내부 텍스트 색상 조절 */
+.custom-popover.main-page .category-text {
+  color: white;
+}
+
+/* 메인페이지일 때 category-text::after 밑줄 색상 흰색 처리 */
+.custom-popover.main-page .category-text::after {
+  background-color: white;
 }
