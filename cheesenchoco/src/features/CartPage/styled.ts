@@ -173,6 +173,7 @@ export const CartPageStyled = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+    cursor: pointer;
   }
 
   .cart-row img {

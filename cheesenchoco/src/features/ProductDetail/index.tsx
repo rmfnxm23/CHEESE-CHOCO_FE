@@ -78,11 +78,6 @@ const ProductDetail = () => {
 
   // 장바구니 추가
   const handleCart = async (id: any) => {
-    // const data = { id, selectedColor, selectedSize };
-    // const data = {id, selectedOptions.color}
-    // console.log(selectedOptions, "data 변경");
-    // return;
-
     if (selectedOptions.length === 0) {
       alert("옵션을 선택해주세요.");
       return;
@@ -98,27 +93,16 @@ const ProductDetail = () => {
       })),
     };
 
-    console.log("보낼 데이터:", data);
-    // return;
-
     try {
       const accessToken = Cookies.get("accessToken");
 
       const res = await api.post(`/cart/register`, data, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      // if (res.data) alert(res.data.message);
     } catch (err) {
       console.error(err);
     }
   };
-
-  // const optionCheck = () => {
-  //   if (!selectedColor || !selectedSize) {
-  //     return alert("옵션을 선택해주세요");
-  //   }
-  // };
 
   const addSelectedOption = () => {
     if (!selectedColor || !selectedSize) {
@@ -144,49 +128,6 @@ const ProductDetail = () => {
     setSelectedOptions((prev) => [...prev, newOption]);
   };
 
-  // // useRef로 항상 최신 값을 관리해서 중복확인.
-  // const selectedOptionsRef = useRef(selectedOptions);
-
-  // useEffect(() => {
-  //   selectedOptionsRef.current = selectedOptions;
-  // }, [selectedOptions]);
-
-  // // 선택된 상품을 자동 추가
-  // useEffect(() => {
-  //   if (!selectedColor || !selectedSize || !product) return;
-  //   // if (!selectedOptions) return;
-
-  //   const isDuplicate = selectedOptions.some(
-  //     (opt) => opt.color === selectedColor && opt.size === selectedSize
-  //   );
-
-  //   // if (!isDuplicate) {
-  //   //   setSelectedOptions((prev) => [
-  //   //     ...prev,
-  //   //     {
-  //   //       color: selectedColor,
-  //   //       size: selectedSize,
-  //   //       price: product.price,
-  //   //       quantity: 1, // 초기 수량 1로 추가
-  //   //     },
-  //   //   ]);
-  //   // }
-  //   if (!isDuplicate) {
-  //     const newOption = {
-  //       color: selectedColor,
-  //       size: selectedSize,
-  //       price: product.price,
-  //       quantity: 1,
-  //     };
-  //     setSelectedOptions((prev) => [...prev, newOption]);
-  //   }
-
-  //   console.log(selectedOptions, "수량 있니");
-
-  //   // ✅ 선택 후 select 초기화
-  //   setSelectedColor("");
-  //   setSelectedSize("");
-  // }, [selectedColor, selectedSize]);
   const selectedOptionsRef = useRef(selectedOptions);
 
   // 항상 최신 selectedOptions를 ref에 반영
@@ -239,21 +180,7 @@ const ProductDetail = () => {
   const [placement, setPlacement] =
     useState<DrawerProps["placement"]>("bottom");
   const [drawerOpened, setDrawerOpened] = useState(false); // 드로어 오픈 여부
-  // const [windowWidth, setWindowWidth] = useState(0);
 
-  // useEffect(() => {
-  //   // 브라우저 환경에서만 실행됨
-  //   function handleResize() {
-  //     setWindowWidth(window.innerWidth);
-  //   }
-  //   handleResize(); // 최초 한번 호출해서 초기값 세팅
-  //   window.addEventListener("resize", handleResize);
-
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
-
-  // // windowWidth가 0일 땐 아직 초기화 안 된 상태이므로 로딩 처리 가능
-  // if (windowWidth === 0) return null;
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 700 && drawerOpened) {
@@ -319,7 +246,6 @@ const ProductDetail = () => {
   return (
     <>
       <Header />
-      {/* <div>현재 창 너비: {windowWidth}px</div> */}
       {product && (
         <div>
           <ProductDetailStyled className={clsx("detail-wrap")}>
@@ -337,11 +263,6 @@ const ProductDetail = () => {
                   >
                     {existingImages.map((src, index) => (
                       <SwiperSlide key={`existing-${index}`}>
-                        {/* <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
-                          alt={`기존 이미지-${index}`}
-                          // style={{ width: "100%", height: "auto" }}
-                        /> */}
                         <div className="slide-img-box">
                           <img
                             src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
@@ -357,9 +278,7 @@ const ProductDetail = () => {
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(product?.content || ""),
                   }}
-                >
-                  {/* {product?.content} */}
-                </div>
+                ></div>
               </div>
 
               <div className="product-info">
@@ -456,7 +375,6 @@ const ProductDetail = () => {
                           handleCart(id);
                           setIsModalOpen(true);
                         } else {
-                          // optionCheck();
                           addSelectedOption();
                         }
                       }}
@@ -472,7 +390,10 @@ const ProductDetail = () => {
                         <div className="ant-button">
                           <button
                             className="shop-btn"
-                            onClick={() => setIsModalOpen(false)}
+                            onClick={() => {
+                              setIsModalOpen(false);
+                              setSelectedOptions([]);
+                            }}
                           >
                             쇼핑 계속하기
                           </button>
@@ -508,55 +429,15 @@ const ProductDetail = () => {
             </div>
             {/* 800px 이하에서만 보이는 하단 고정 버튼 */}
             <div className="bottom-fixed-buttons">
-              <div
-                className="action-cart"
-                // onClick={() => {
-                //   showDrawer(); // 무조건 먼저 실행
-
-                //   if (selectedOptions.length > 0) {
-                //     handleCart(id);
-                //     setIsModalOpen(true);
-                //   } else {
-                //     alert("옵션을 선택해주세요.");
-                //   }
-                // }}
-                onClick={handleCartClick}
-              >
+              <div className="action-cart" onClick={handleCartClick}>
                 CART
               </div>
-              <div
-                className="action-buy"
-                // onClick={() => {
-                //   showDrawer(); // 무조건 먼저 실행
-
-                //   if (!isAuthenticated) {
-                //     router.push("/login");
-                //     return;
-                //   }
-
-                //   if (selectedOptions.length > 0) {
-                //     handleCart(id);
-                //     setIsModalOpen(true);
-                //   } else {
-                //     alert("옵션을 선택해주세요.");
-                //   }
-                // }}
-                onClick={handleBuyClick}
-              >
+              <div className="action-buy" onClick={handleBuyClick}>
                 BUY NOW
               </div>
             </div>
 
             {/* 업 슬라이스 -옵션 선택 창 */}
-            {/* <CustomDrawer
-              // title="Drawer with extra actions"
-              placement={placement}
-              // placement="bottom"
-              width={500}
-              onClose={onClose}
-              open={open}
-           
-            > */}
             <CustomDrawer
               placement="bottom"
               width={500}
@@ -564,7 +445,6 @@ const ProductDetail = () => {
               open={drawerOpened}
               closable={false} // X 버튼 제거
               title={null} // 제목 제거
-              // headerStyle={{ padding: 0 }} // 헤더 패딩 제거
             >
               {/* 상단 핸들 바 */}
               <div
@@ -589,22 +469,6 @@ const ProductDetail = () => {
               <div className="drawer-option">
                 {/* 색상 옵션 */}
                 <div className="product-option">
-                  {/* {existingColors.length >= 1 && (
-                    <select
-                      name="color"
-                      value={selectedColor}
-                      onChange={(e) => {
-                        setSelectedColor(e.target.value);
-                      }}
-                    >
-                      <option value="">color</option>
-                      {existingColors.map((x) => (
-                        <option value={x} key={x}>
-                          {x}
-                        </option>
-                      ))}
-                    </select>
-                  )} */}
                   {existingColors.length >= 1 && (
                     <div className="custom-select-wrapper">
                       <div
@@ -647,22 +511,6 @@ const ProductDetail = () => {
                   )}
 
                   {/* 사이즈 옵션 */}
-                  {/* {existingSize.length >= 1 && (
-                    <select
-                      name="size"
-                      value={selectedSize}
-                      onChange={(e) => {
-                        setSelectedSize(e.target.value);
-                      }}
-                    >
-                      <option value="">size</option>
-                      {existingSize.map((x) => (
-                        <option value={x} key={x}>
-                          {x}
-                        </option>
-                      ))}
-                    </select>
-                  )} */}
                   {existingSize.length >= 1 && (
                     <div className="custom-select-wrapper">
                       <div

@@ -20,10 +20,10 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface CartProps {
   id: number;
+  productId: number;
   selectColor: string;
   selectSize: string;
   quantity: number;
-  // price: number;
   product: {
     img: string; // 파싱된 배열
     name: string;
@@ -340,157 +340,6 @@ const CartPage = () => {
                     </div>
                   </div>
                 ) : (
-                  //     <>
-                  //       <div className="cart-header">
-                  //         <div className="col checkbox">
-                  //           <input
-                  //             type="checkbox"
-                  //             onChange={handleAllCheck}
-                  //             checked={allChecked}
-                  //           />
-                  //         </div>
-                  //         <div className="col product">상품정보</div>
-                  //         <div className="col quantity">수량</div>
-                  //         <div className="col price">상품 금액</div>
-                  //         <div className="col delivery">구매 선택</div>
-                  //       </div>
-
-                  //       {cartList.map((item) => {
-                  //         // const imageArray = item.product.img[0];
-                  //         // const imageUrl = imageArray[0];
-
-                  //         return (
-                  //           <div className="cart-row" key={item.id}>
-                  //             <div className="col checkbox">
-                  //               <input
-                  //                 type="checkbox"
-                  //                 checked={checkedItems.includes(item.id)}
-                  //                 onChange={() => handleCheck(item.id)}
-                  //               />
-                  //             </div>
-                  //             <div className="col product">
-                  //               <div className="product-info">
-                  //                 <div className="product-left">
-                  //                   {/* <img
-                  //                     src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${imageArray}`}
-                  //                     alt={item.product.name}
-                  //                     width={80}
-                  //                     height={80}
-                  //                   /> */}
-                  //                   {item.product?.img &&
-                  //                     Array.isArray(item.product.img) && (
-                  //                       <img
-                  //                         src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
-                  //                         alt={item.product.name || "상품 이미지"}
-                  //                         width={80}
-                  //                         height={80}
-                  //                       />
-                  //                     )}
-                  //                   <div className="info">
-                  //                     <p className="info-name">
-                  //                       {item.product?.name || "상품 이미지"}
-                  //                     </p>
-                  //                     <p className="info-opt">
-                  //                       옵션: {item.selectColor} / {item.selectSize}
-                  //                     </p>
-                  //                   </div>
-                  //                 </div>
-                  //                 <button
-                  //                   className="delete-btn"
-                  //                   onClick={() => handleDelete(item.id)}
-                  //                 >
-                  //                   삭제
-                  //                 </button>
-                  //               </div>
-                  //             </div>
-                  //             <div className="col quantity">{item.quantity}</div>
-                  //             <div className="col price">
-                  //               {formatPrice(item.product.price)}원
-                  //             </div>
-                  //             <div className="col delivery">
-                  //               <button
-                  //                 onClick={() => {
-                  //                   localStorage.setItem(
-                  //                     "checkedItems",
-                  //                     JSON.stringify([item.id])
-                  //                   );
-                  //                   updateStep(2);
-                  //                 }}
-                  //               >
-                  //                 바로구매
-                  //               </button>
-                  //             </div>
-                  //           </div>
-                  //         );
-                  //       })}
-                  //     </>
-                  //   )}
-
-                  //   {/* 모바일일 때 */}
-                  //   {/* 툴바 추가 */}
-                  //   <div className="cart-toolbar">
-                  //     <label>
-                  //       <input
-                  //         type="checkbox"
-                  //         onChange={handleAllCheck}
-                  //         checked={allChecked}
-                  //       />{" "}
-                  //       전체선택
-                  //     </label>
-                  //     <button onClick={handleBulkDelete}>선택삭제</button>
-                  //   </div>
-
-                  //   {cartList.map((item) => (
-                  //     <div className="mobile-cart-card" key={item.id}>
-                  //       <div className="mobile-cart-top">
-                  //         <input
-                  //           type="checkbox"
-                  //           checked={checkedItems.includes(item.id)}
-                  //           onChange={() => handleCheck(item.id)}
-                  //         />
-                  //         <button
-                  //           className="mobile-delete-btn"
-                  //           onClick={() => handleDelete(item.id)}
-                  //         >
-                  //           삭제
-                  //         </button>
-                  //       </div>
-
-                  //       <div className="mobile-cart-body">
-                  //         <img
-                  //           src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.img[0]}`}
-                  //           alt={item.product.name}
-                  //           width={80}
-                  //           height={80}
-                  //         />
-                  //         <div className="mobile-info">
-                  //           <p className="info-name">{item.product.name}</p>
-                  //           <p className="info-opt">
-                  //             옵션: {item.selectColor} / {item.selectSize}
-                  //           </p>
-                  //           <p className="info-qty">수량: {item.quantity}</p>
-                  //           <p className="info-price">
-                  //             {formatPrice(item.product.price)}원
-                  //           </p>
-                  //         </div>
-                  //       </div>
-
-                  //       <div className="mobile-cart-footer">
-                  //         <button
-                  //           onClick={() => {
-                  //             localStorage.setItem(
-                  //               "checkedItems",
-                  //               JSON.stringify([item.id])
-                  //             );
-                  //             updateStep(2);
-                  //           }}
-                  //         >
-                  //           바로구매
-                  //         </button>
-                  //       </div>
-                  //     </div>
-                  //   ))}
-                  // </div>
                   <>
                     {isMobile ? (
                       <>
@@ -587,7 +436,14 @@ const CartPage = () => {
                             </div>
                             <div className="col product">
                               <div className="product-info">
-                                <div className="product-left">
+                                <div
+                                  className="product-left"
+                                  onClick={() => {
+                                    router.push(
+                                      `/product-detail/${item.productId}`
+                                    );
+                                  }}
+                                >
                                   {item.product?.img &&
                                     Array.isArray(item.product.img) && (
                                       <img
