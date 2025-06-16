@@ -34,6 +34,23 @@ const MypageLayout = ({ children, activeTab }: MypageLayoutProps) => {
               </li>
             </ul>
           </aside>
+
+          {/* 모바일 탭 메뉴 */}
+          <div className="mypage-mobile-tabs">
+            <Link
+              href="/mypage/orders"
+              className={clsx({ active: activeTab === "orders" })}
+            >
+              주문 조회
+            </Link>
+            <Link
+              href="/mypage/profile"
+              className={clsx({ active: activeTab === "profile" })}
+            >
+              회원정보 수정
+            </Link>
+          </div>
+
           <main className="w-3/4 right">{children}</main>
         </div>
       </MypageLayoutStyled>

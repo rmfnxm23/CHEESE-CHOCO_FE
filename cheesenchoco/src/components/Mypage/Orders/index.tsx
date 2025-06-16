@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { OrdersStyled } from "./styled";
 import clsx from "clsx";
 import api from "@/lib/api";
+import React from "react";
 
 interface OrderProps {
   id: number;
@@ -32,6 +33,11 @@ const Orders = () => {
   const [orderList, setOrderList] = useState<OrderProps[]>([]);
 
   useEffect(() => {
+    if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     const getOrderList = async () => {
       try {
         const response = await api.get("/payment/orderList", {
@@ -47,6 +53,7 @@ const Orders = () => {
         } else alert("주문 내역이 없습니다.");
       } catch (err) {
         console.error(err);
+        alert("주문 내역을 불러오는 중 오류가 발생했습니다.");
       }
     };
 
@@ -54,116 +61,86 @@ const Orders = () => {
   }, []);
 
   return (
-    <OrdersStyled className={clsx("orders-wrap")}>
+    <OrdersStyled className="orders-wrap">
       <h2 className="title">주문 내역 조회</h2>
       {orderList.length > 0 ? (
-        // <div className="table">
-        //   <div className="thead">
-        //     <div>주문번호</div>
-        //     <div>주문일자</div>
-        //     <div>결제상태</div>
-        //   </div>
-        //   {/* <div className="tbody">
-        //     {orderList.map((order) => (
-        //       <div key={order.id} className="row">
-        //         <div className="cell">{order.orderId}</div>
-        //         <div className="cell">
-        //           {new Date(order.createdAt).toLocaleDateString()}
-        //         </div>
-        //         <div className="cell">
-        //           {order.status === "DONE" ? "결제 완료" : "결제 대기"}
-        //         </div>
-        //       </div>
-        //     ))}
-        //   </div> */}
-        //   <div className="tbody">
-        //     {orderList.map((order) => (
-        //       <div key={order.id} className="row">
-        //         <div className="cell">
-        //           <div>{order.orderId}</div>
-        //           {/* 상품 목록 출력 */}
-        //           <ul>
-        //             {/* {order.items?.map((item: any) => (
-        //               <li key={item.id}>
-        //                 {item.product?.name} / {item.selectColor} /{" "}
-        //                 {item.selectSize}
-        //               </li>
-        //             ))} */}
-        //             {order.items.map((item) => (
-        //               <div key={item.id} className="product">
-        //                 <img
-        //                   src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.firstImage}`}
-        //                   alt={item.product.name}
-        //                   width={80}
-        //                 />
-        //                 <div className="info">
-        //                   <p>{item.product.name}</p>
-        //                   <p>
-        //                     옵션: {item.selectColor} / {item.selectSize}
-        //                   </p>
-        //                   <p>가격: {item.product.price.toLocaleString()}원</p>
-        //                   <p>수량: {item.quantity}</p>
-        //                 </div>
-        //               </div>
-        //             ))}
-        //           </ul>
-        //         </div>
-        //         <div className="cell">
-        //           {new Date(order.createdAt).toLocaleDateString()}
-        //         </div>
-        //         <div className="cell">
-        //           {order.status === "DONE" ? "결제 완료" : "결제 대기"}
-        //         </div>
-        //       </div>
-        //     ))}
-        //   </div>
-        // </div>
-        <div className="table">
-          <div className="thead">
-            <div>주문번호</div>
-            <div>주문일자</div>
-            <div>결제상태</div>
-          </div>
+        <div className="orders-table-wrap">
+          <table className="order-table">
+            <thead>
+              <tr>
+                <th>상품정보</th>
+                <th>주문번호</th>
+                <th>결제상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderList.map((order) => (
+                <React.Fragment key={order.id}>
+                  {/* 주문일자 행 */}
+                  <tr className="order-date-row">
+                    <td colSpan={3} className="order-date">
+                      주문일자{" "}
+                      {new Date(order.createdAt).toISOString().slice(0, 10)}
+                    </td>
+                  </tr>
 
-          <div className="tbody">
-            {orderList.map((order) => (
-              <div key={order.id} className="order-block">
-                {/* 주문 요약 정보 */}
-                <div className="row order-info">
-                  <div className="cell">{order.orderId}</div>
-                  <div className="cell">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </div>
-                  <div className="cell">
-                    {order.status === "DONE" ? "결제 완료" : "결제 대기"}
-                  </div>
-                </div>
-
-                {/* 주문 상품 목록 */}
-                {order.items.map((item) => (
-                  <div key={item.id} className="row product-row">
-                    <div className="cell product-cell">
-                      <div className="product">
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.firstImage}`}
-                          alt={item.product.name}
-                          width={80}
-                        />
-                        <div className="info">
-                          <p>{item.product.name}</p>
-                          <p>
-                            옵션: {item.selectColor} / {item.selectSize}
-                          </p>
-                          <p>가격: {item.product.price.toLocaleString()}원</p>
-                          <p>수량: {item.quantity}</p>
+                  {/* 상품 목록 */}
+                  {order.items.map((item, index) => (
+                    <tr
+                      key={`${order.id}-${item.id}`}
+                      className={clsx({
+                        "last-product-row": index === order.items.length - 1,
+                      })}
+                    >
+                      {/* 상품 정보 */}
+                      <td className="product-info">
+                        <div className="product">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${item.product.firstImage}`}
+                            alt={item.product.name}
+                          />
+                          <div className="info">
+                            <p className="name">{item.product.name}</p>
+                            <p>
+                              옵션: {item.selectColor} / {item.selectSize}
+                            </p>
+                            <p>수량: {item.quantity}</p>
+                            <p>가격: {item.product.price.toLocaleString()}원</p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+                      </td>
+
+                      {/* 주문번호/결제상태: 첫 행만 표시, 이후는 병합 */}
+                      {index === 0 && (
+                        <>
+                          <td
+                            className={clsx("order-id", {
+                              "last-product-cell": order.items.length === 1,
+                            })}
+                            rowSpan={order.items.length}
+                          >
+                            {order.orderId}
+                          </td>
+                          <td
+                            className={clsx("status", {
+                              done: order.status === "DONE",
+                              pending: order.status !== "DONE",
+                              "last-product-cell": order.items.length === 1,
+                            })}
+                            rowSpan={order.items.length}
+                          >
+                            {order.status === "DONE"
+                              ? "결제 완료"
+                              : "결제 대기"}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <p className="empty">주문 내역이 없습니다.</p>

@@ -2,117 +2,47 @@ import { Modal } from "antd";
 import styled from "styled-components";
 
 export const ProfileStyled = styled.div`
-  /* .title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding: 0 0 0.75rem;
-    border-bottom: 4px solid #aaa;
-  }
-
-  section {
-    margin-bottom: 30px;
-  }
-
-  .section1 .myInfo Input {
-    border: none;
-  }
-
-  .myInfo {
-    display: flex;
-
-    .block {
-      width: 130px;
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .duplicate,
-  .change-btn {
-    width: 15%;
-  } */
-  /* .title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding: 0 0 0.75rem;
-    border-bottom: 4px solid #aaa;
-  }
-
-  section {
-    margin-bottom: 30px;
-  }
-
-  .section1 .myInfo Input {
-    border: none;
-  }
-
-  .myInfo {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-
-    .block {
-      width: 130px;
-      flex-shrink: 0; 
-      display: flex;
-      align-items: center;
-      padding-top: 0.5rem;
-    }
-
-    &.contact {
-      align-items: flex-start;
-    }
-
-    .input-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-
-      .input-row {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .error,
-      .check {
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-      }
-    }
-  }
-
-  .duplicate,
-  .change-btn {
-    padding: 0.5rem 1rem;
-    background: #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    white-space: nowrap;
-  }
-
-  .text-green-600 {
-    color: #16a34a;
-  }
-
-  .text-red-500 {
-    color: #ef4444;
-  } */
   .title {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 4px solid #aaa;
+    border-bottom: 3px solid #000;
+  }
+
+  .text {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   section {
     margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  form section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
   .section1 .myInfo Input {
     border: none;
+    outline: none;
+    background-color: inherit;
+    padding: 0;
+
+    &:focus {
+      border: none;
+      outline: none;
+      box-shadow: none; /* 브라우저 기본 포커스 그림자 제거 */
+    }
+  }
+
+  input[readonly] {
+    cursor: default;
+    background-color: #f9f9f9; /* 선택사항: readonly 느낌 강조 */
   }
 
   .myInfo {
@@ -165,10 +95,6 @@ export const ProfileStyled = styled.div`
       color: #ef4444;
     }
 
-    /* .check {
-      color: #16a34a;
-    } */
-
     .text-green {
       color: green;
     }
@@ -181,19 +107,28 @@ export const ProfileStyled = styled.div`
   .update-btn {
     display: block;
     margin: 2rem auto 0;
-    padding: 0.75rem 2rem;
+    padding: 0.6rem 1.3rem;
     font-size: 1rem;
     font-weight: bold;
-    background-color: #2563eb;
+    /* background-color: #2563eb; */
+    background-color: #7d7d7d;
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background 0.2s;
 
     &:hover {
       background-color: #1d4ed8;
     }
+  }
+
+  .update-btn:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   .fire {

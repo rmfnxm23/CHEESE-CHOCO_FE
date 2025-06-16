@@ -2,116 +2,126 @@ import styled from "styled-components";
 
 export const OrdersStyled = styled.div`
   .title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding: 0 0 0.75rem;
-    border-bottom: 4px solid #aaa;
+    margin-bottom: 20px;
   }
 
-  /* .table {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  .empty {
+    text-align: center;
+    padding: 40px 0;
+    font-size: 16px;
+    color: #777;
   }
 
-  .thead,
-  .row {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95rem;
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    font-family: Arial, sans-serif;
   }
 
-  .thead {
-    background-color: #f6f6f6;
+  /* 테이블 헤더 */
+  .order-table thead th {
+    border-top: 2px solid #444;
+    border-bottom: 1px solid #ddd;
+    padding: 12px;
     font-weight: bold;
+    color: #444;
+    text-align: center;
+    background-color: #f9f9f9;
+    font-size: 17px;
   }
 
-  .row:hover {
-    background-color: #fafafa;
+  /* 주문일자 그룹 구분 행 */
+  .order-date-row td.order-date {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    padding: 10px 12px;
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
+    background-color: #fefefe;
   }
 
-  .cell {
+  .order-table tbody tr.order-date-row:not(:first-of-type) td.order-date {
+    padding-top: 24px;
+    padding-bottom: 10px;
+  }
+
+  /* 상품 행 기본 */
+  .order-table tbody tr {
+    background-color: #fff;
+    vertical-align: middle;
+  }
+
+  /* 상품 행 td 기본 스타일 */
+  .order-table td {
+    padding: 12px;
+    text-align: left;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* 상품 정보 셀 */
+  .product-info {
     display: flex;
     align-items: center;
-  }
-
-  .empty {
-    padding: 2rem 0;
-    text-align: center;
-    color: #999;
-  } */
-  .table {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .thead,
-  .row.order-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    font-weight: bold;
-    background-color: #f5f5f5;
-    padding: 10px;
-  }
-
-  .row.product-row {
-    display: flex;
-    justify-content: flex-start;
-    padding: 10px 20px;
-    background-color: #fafafa;
-    border-bottom: 1px solid #eee;
-  }
-
-  .product-cell {
-    flex: 1;
-  }
-
-  .cell.product-cell {
-    grid-column: 1 / -1; /* grid 영역 전부 사용 */
-  }
-
-  .product {
-    display: flex;
     gap: 16px;
+    padding: 12px 16px;
   }
 
-  .info {
+  .product-info .product {
+    display: flex;
+    gap: 12px;
+  }
+
+  .product-info .product img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eee;
+  }
+
+  .product-info .info {
+    font-size: 14px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    justify-content: center;
   }
 
-  .empty {
-    padding: 2rem;
-    text-align: center;
+  .product-info .info .name {
+    font-weight: bold;
+    margin-bottom: 6px;
   }
 
-  @media (max-width: 768px) {
-    .thead {
-      display: none;
-    }
+  /* 주문번호 및 결제상태 셀 */
+  .order-id,
+  .status {
+    width: 120px;
+    text-align: center !important;
+    vertical-align: middle;
+    font-weight: bold;
+    padding: 16px;
+    font-size: 14px;
+  }
 
-    .row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      padding: 1rem;
-      border-bottom: 1px solid #eee;
+  .status.done {
+    color: #2e7d32;
+  }
 
-      .cell {
-        font-size: 0.95rem;
+  .status.pending {
+    color: #c62828;
+  }
 
-        &::before {
-          content: attr(data-label);
-          font-weight: bold;
-          margin-right: 0.5rem;
-          color: #555;
-        }
-      }
-    }
+  /* 마지막 상품 행에만 border-bottom 추가 */
+  .order-table tbody tr.last-product-row td {
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* rowSpan된 주문번호/결제상태 셀에도 border-bottom */
+  .order-table td.last-product-cell {
+    border-bottom: 1px solid #ddd;
   }
 `;

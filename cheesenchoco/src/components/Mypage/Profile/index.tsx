@@ -27,6 +27,7 @@ const Profile = () => {
     boolean: false,
     message: "",
   });
+  const [isPhoneChanged, setIsPhoneChanged] = useState(false); // 휴대폰 변경 여부
 
   // 비밀번호 유효성 검사에 따른 에러 메세지 상태 관리
   const [passError, setPassError] = useState("");
@@ -90,16 +91,6 @@ const Profile = () => {
     }
   }, [user]);
 
-  // const handleSubmit = (values: any) => {
-  //   if (!phoneDuplicate.boolean) {
-  //     alert("전화번호 중복확인을 진행해주세요.");
-  //     return;
-  //   }
-  //   // 예시: API 호출
-  //   console.log("회원정보 수정 요청", values);
-  //   alert("회원정보가 수정되었습니다.");
-  // };
-
   // 회원 탈퇴 처리
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,14 +135,27 @@ const Profile = () => {
     },
     onSubmit: async (values) => {
       console.log("회원정보 수정 요청:", values);
+      console.log(
+        "onSubmit 실행됨",
+        values,
+        isPhoneChanged,
+        isPhone,
+        phoneDuplicate.boolean
+      );
       if (!user) {
         return;
       }
 
-      if (!phoneDuplicate.boolean) {
-        alert("휴대폰 중복 확인을 해주세요.");
-        return;
-      }
+      // if (isPhoneChanged) {
+      //   if (!isPhone) {
+      //     alert("유효한 휴대폰 번호를 입력해주세요."); // 유효성 검사 미통과
+      //     return;
+      //   }
+      //   if (!phoneDuplicate.boolean) {
+      //     alert("휴대폰 번호 중복 확인을 해주세요."); // 중복 검사 미완료
+      //     return;
+      //   }
+      // }
 
       const data = {
         id: user.id,
@@ -163,7 +167,6 @@ const Profile = () => {
 
         if (res.data.success === true) {
           alert(res.data.message);
-
           setPhoneError("");
           setPhoneDuplicate({ boolean: false, message: "" });
         } else {
@@ -226,6 +229,78 @@ const Profile = () => {
             </div>
           </section>
 
+          {/* 비밀번호 변경 */}
+          <section>
+            <h3 className="text">보안 정보</h3>
+            <div className="myInfo">
+              <label className="block">비밀번호</label>
+
+              <div className="input-group">
+                <div className="input-row">
+                  <Input value="●●●●●●●●●" readOnly />
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(true)}
+                    className="right-btn"
+                  >
+                    변경
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 비밀번호 변경 모달 */}
+          <PassModal
+            title="비밀번호 변경"
+            open={showModal}
+            onCancel={() => setShowModal(false)}
+            centered
+            footer={null}
+            width={450}
+          >
+            <form onSubmit={passFormik.handleSubmit}>
+              <input
+                type="password"
+                name="password"
+                value={passFormik.values.password}
+                onChange={(e) => {
+                  passFormik.handleChange(e);
+                  passValidation(e.target.value, setPassError, setIsPassword);
+                }}
+                placeholder="새 비밀번호"
+                required
+              />
+              <p className="error-message">{passError}</p>
+
+              <input
+                type="password"
+                name="passwordCheck"
+                value={passFormik.values.passwordCheck}
+                onChange={(e) => {
+                  passFormik.handleChange(e);
+                  passCheckValidation(
+                    e.target.value,
+                    passFormik.values.password,
+                    setPassCheckError,
+                    setIsPasswordCheck
+                  );
+                }}
+                placeholder="새 비밀번호 확인"
+                required
+              />
+              <p className="error-message">{passCheckError}</p>
+
+              <button
+                type="submit"
+                disabled={!(isPassword && isPasswordCheck)}
+                className="change-btn"
+              >
+                변경
+              </button>
+            </form>
+          </PassModal>
+
           <section>
             <h3 className="text">연락처 수정</h3>
             <div className="myInfo contact">
@@ -239,123 +314,64 @@ const Profile = () => {
                     onChange={(e) => {
                       const formatted = formatPhone(e.target.value);
                       infoFormik.setFieldValue("phone", formatted);
-                      phoneValidation(formatted, setPhoneError, setIsPhone);
-                      setPhoneDuplicate({ boolean: false, message: "" });
+
+                      const changed =
+                        formatted !== infoFormik.initialValues.phone;
+                      setIsPhoneChanged(changed);
+
+                      if (changed) {
+                        phoneValidation(formatted, setPhoneError, setIsPhone);
+                        setPhoneDuplicate({ boolean: false, message: "" });
+                      } else {
+                        // 원래 번호로 복귀했을 때
+                        setPhoneError("");
+                        setIsPhone(true);
+                        setPhoneDuplicate({ boolean: true, message: "" });
+                      }
                     }}
                   />
                   <button
                     type="button"
                     className="duplicate btn right-btn"
                     onClick={() => duplicateCheckPhone(infoFormik.values.phone)}
-                    disabled={!isPhone}
+                    // disabled={!isPhone}
+                    disabled={!isPhone || !isPhoneChanged}
                   >
                     중복확인
                   </button>
                 </div>
-                {/* {phoneError && <p className="error">{phoneError}</p>}
-                {phoneDuplicate.message && (
-                  <p
-                    className={`message check ${
-                      phoneDuplicate.boolean ? "text-green" : "text-red"
-                    }`}
-                  >
-                    {phoneDuplicate.message}
-                  </p>
-                )} */}
+
                 {phoneError ? (
                   <p className="error">{phoneError}</p>
-                ) : phoneDuplicate.message ? (
-                  <p
-                    className={`message check ${
-                      phoneDuplicate.boolean ? "text-green" : "text-red"
-                    }`}
-                  >
-                    {phoneDuplicate.message}
-                  </p>
-                ) : null}
+                ) : (
+                  phoneDuplicate.message && (
+                    <p
+                      className={`message check ${
+                        phoneDuplicate.boolean ? "text-green" : "text-red"
+                      }`}
+                    >
+                      {phoneDuplicate.message}
+                    </p>
+                  )
+                )}
               </div>
             </div>
           </section>
 
           {/* 제출 버튼 */}
           <div>
-            <button type="submit" className="update-btn" disabled={!isPhone}>
+            <button
+              type="submit"
+              className="update-btn"
+              // disabled={!isPhone}
+              disabled={
+                isPhoneChanged ? !(isPhone && phoneDuplicate.boolean) : false
+              }
+            >
               수정하기
             </button>
           </div>
         </form>
-
-        {/* 비밀번호 변경 */}
-        <section>
-          <h3 className="text">보안 정보</h3>
-          <div className="myInfo">
-            <label className="block">비밀번호</label>
-
-            <div className="input-group">
-              <div className="input-row">
-                <Input value="●●●●●●●●●" readOnly />
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="right-btn"
-                >
-                  변경
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 비밀번호 변경 모달 */}
-        <PassModal
-          title="비밀번호 변경"
-          open={showModal}
-          onCancel={() => setShowModal(false)}
-          centered
-          footer={null}
-          width={450}
-        >
-          <form onSubmit={passFormik.handleSubmit}>
-            <input
-              type="password"
-              name="password"
-              value={passFormik.values.password}
-              onChange={(e) => {
-                passFormik.handleChange(e);
-                passValidation(e.target.value, setPassError, setIsPassword);
-              }}
-              placeholder="새 비밀번호"
-              required
-            />
-            <p className="error-message">{passError}</p>
-
-            <input
-              type="password"
-              name="passwordCheck"
-              value={passFormik.values.passwordCheck}
-              onChange={(e) => {
-                passFormik.handleChange(e);
-                passCheckValidation(
-                  e.target.value,
-                  passFormik.values.password,
-                  setPassCheckError,
-                  setIsPasswordCheck
-                );
-              }}
-              placeholder="새 비밀번호 확인"
-              required
-            />
-            <p className="error-message">{passCheckError}</p>
-
-            <button
-              type="submit"
-              disabled={!(isPassword && isPasswordCheck)}
-              className="change-btn"
-            >
-              변경
-            </button>
-          </form>
-        </PassModal>
 
         {/* 탈퇴 */}
         <div className="mt-10 text-right">
