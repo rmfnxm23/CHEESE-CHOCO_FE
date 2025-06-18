@@ -31,7 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const requiresAuth = authRequiredRoutes.some((route) =>
     router.pathname.startsWith(route)
   );
-
+  console.log(authRequiredRoutes);
   return (
     <>
       {/* <Header /> */}
