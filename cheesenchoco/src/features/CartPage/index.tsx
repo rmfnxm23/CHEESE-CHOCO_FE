@@ -253,6 +253,10 @@ const CartPage = () => {
       router.push("/login");
       return;
     }
+
+    // ✅ 선택한 항목을 localStorage에 저장
+    localStorage.setItem("checkedItems", JSON.stringify(checkedItems));
+
     updateStep(2);
   };
 
@@ -269,26 +273,12 @@ const CartPage = () => {
   //   }
   // }, []);
 
-  // localStorage에서 불러오기
-  useEffect(() => {
-    console.log("🌀 useEffect 실행됨!");
-
-    const storedItems = localStorage.getItem("checkedItems");
-    if (storedItems) {
-      console.log("✅ localStorage에서 불러온 checkedItems:", storedItems);
-      setCheckedItems(JSON.parse(storedItems));
-    } else {
-      console.log("🚫 localStorage에 checkedItems 없음");
-    }
-    setIsCheckedInitialized(true);
-  }, []);
-
   // checkedItems 변경될 때만 저장 (불러오기 완료 후에만)
-  useEffect(() => {
-    if (isCheckedInitialized) {
-      localStorage.setItem("checkedItems", JSON.stringify(checkedItems));
-    }
-  }, [checkedItems, isCheckedInitialized]);
+  // useEffect(() => {
+  //   if (isCheckedInitialized) {
+  //     localStorage.setItem("checkedItems", JSON.stringify(checkedItems));
+  //   }
+  // }, [checkedItems, isCheckedInitialized]);
 
   useEffect(() => {
     // cartList를 서버에서 불러왔다면 여기에 로드 완료 표시
@@ -296,8 +286,6 @@ const CartPage = () => {
       setIsCartReady(true);
     }
   }, [cartList]);
-
-  //디버깅 확인
 
   return (
     <>

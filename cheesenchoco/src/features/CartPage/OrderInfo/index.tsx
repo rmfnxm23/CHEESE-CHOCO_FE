@@ -44,7 +44,7 @@ export default function OrderInfo({
   step,
   setStep,
   updateStep,
-  checkedItems,
+  // checkedItems,
   cartList,
   deliveryFee,
   setDeliveryFee,
@@ -119,9 +119,17 @@ export default function OrderInfo({
   //   setTotalPrice(formatPrice(total + fee));
   // }, [checkedItems, selectedItems]);
 
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+
   useEffect(() => {
-    console.log("✅ [OrderInfo] 받은 checkedItems:", checkedItems);
-  }, [checkedItems]);
+    const storedItems = localStorage.getItem("checkedItems");
+    if (storedItems) {
+      // const parsedItems = JSON.parse(storedItems);
+      const parsedItems = JSON.parse(storedItems).map((id: any) => Number(id));
+      console.log("📦 로컬에서 불러온 checkedItems:", parsedItems);
+      setCheckedItems(parsedItems);
+    }
+  }, []);
 
   const selectedItems = useMemo(() => {
     return cartList.filter((item) => checkedItems.includes(item.id));
