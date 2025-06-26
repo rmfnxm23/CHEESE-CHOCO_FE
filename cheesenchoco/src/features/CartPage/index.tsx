@@ -47,109 +47,53 @@ const CartPage = () => {
   const [isCartReady, setIsCartReady] = useState(false);
 
   const [productsPrice, setProductsPrice] = useState("0"); // 총 상품 금액
-  const [deliveryFee, setDeliveryFee] = useState<number>(0); // 배송비
+  const [deliveryFee, setDeliveryFee] = useState("0"); // 배송비
   const [totalPrice, setTotalPrice] = useState("0"); // 총 결제 금액
-
-  // 장바구니 전체 목록이 0이 아니고 선택한 상품과 갯수가 동일하면 전체 선택(checkbox) -> 전체 체크박스 상태
-  const allChecked =
-    cartList.length > 0 && checkedItems.length === cartList.length;
-
-  // // [1] URL 쿼리에서 step 값을 읽어서 상태(step)에 반영하는 useEffect
-  // useEffect(() => {
-  //   // router 객체가 완전히 준비되지 않았으면 아무것도 하지 않음 (Next.js의 클라이언트 라우팅 보호)
-  //   if (!router.isReady) return;
-  //   // URL의 쿼리 파라미터 중 "step" 값을 숫자로 변환
-  //   const queryStep = Number(router.query.step);
-  //   // 변환된 값이 유효한 숫자일 경우에만 step 상태에 반영
-  //   // ex) /cart?step=2 라면 step 상태를 2로 설정 → 2단계인 '주문정보 입력' UI를 보여줌
-  // if (!router.query.step) {
-  //   setStep(1); // 쿼리가 없으면 기본값으로
-  //   return;
-  // }
-  //   if (!isNaN(queryStep)) {
-  //     setStep(queryStep);
-  //   }
-  // }, [router.isReady, router.query.step]); // router가 준비됐거나, step 쿼리가 변경될 때마다 실행됨
-
-  // // [2] 현재 step 상태를 업데이트하고 URL 쿼리에도 반영하는 함수
-  // const updateStep = (newStep: number) => {
-  //   // 상태 업데이트 (화면에서 해당 단계의 UI가 보이도록)
-  //   setStep(newStep);
-
-  //   // URL 쿼리에도 step을 반영하여 새로고침 시에도 상태 유지되도록 함
-  //   // ex) step=2면 URL이 /cart?step=2로 바뀜 → 브라우저 뒤로 가기/앞으로 가기 대응 가능
-  //   router.push({
-  //     pathname: router.pathname, // 현재 페이지 경로 유지 (/cart)
-  //     query: { ...router.query, step: newStep }, // 기존 쿼리는 유지하면서 step만 덮어씀
-  //   });
-  // };
-
-  // // 쿼리스트링
-  // useEffect(() => {
-  //   const handleRouteChange = (url: string) => {
-  //     const queryParams = new URLSearchParams(url.split("?")[1]);
-  //     const queryStep = Number(queryParams.get("step"));
-
-  //     if (!isNaN(queryStep)) {
-  //       setStep(queryStep);
-  //     }
-  //   };
-
-  //   // 라우트 변경 시마다 step 쿼리 읽어 상태 동기화
-  //   router.events.on("routeChangeComplete", handleRouteChange);
-
-  //   // 초기 로드 시에도 동기화
-  //   if (router.isReady) {
-  //     const initialStep = Number(router.query.step);
-  //     if (!isNaN(initialStep)) {
-  //       setStep(initialStep);
-  //     }
-  //   }
-
-  //   return () => {
-  //     router.events.off("routeChangeComplete", handleRouteChange);
-  //   };
-  // }, [router]);
 
   // URL의 쿼리에서 step을 읽어 상태에 반영
   const syncStepFromQuery = (query: ParsedUrlQuery) => {
     const queryStep = Number(query.step);
     if (!isNaN(queryStep)) {
-      setStep(queryStep);
+      setStep(queryStep); // 숫자일 경우에만 상태로 반영
     }
   };
 
   useEffect(() => {
+    // ✅ 페이지 진입 시 step 쿼리가 있다면 해당 값으로 초기 상태 설정
     if (router.isReady) {
       syncStepFromQuery(router.query);
     }
 
+    // ✅ 라우트 변경 시 쿼리스트링(step) 값을 추출하여 step 상태 갱신
     const handleRouteChange = (url: string) => {
-      const queryParams = new URLSearchParams(url.split("?")[1]);
+      const queryParams = new URLSearchParams(url.split("?")[1]); // URL에서 쿼리스트링만 분리
       const queryStep = Number(queryParams.get("step"));
       if (!isNaN(queryStep)) {
         setStep(queryStep);
       }
     };
 
+    // ✅ 쿼리에 step 값이 아예 없는 경우 기본값 1로 설정
     if (!router.query.step) {
-      setStep(1); // 쿼리가 없으면 기본값으로
+      setStep(1);
       return;
     }
 
+    // ✅ 라우터 이벤트에 routeChangeComplete가 발생할 때 handleRouteChange 실행되도록 등록
     router.events.on("routeChangeComplete", handleRouteChange);
 
+    // ✅ 컴포넌트 언마운트 시 이벤트 리스너 정리
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router]);
 
-  // 상태와 URL을 함께 업데이트하는 함수
+  // ✅ 상태(step)를 변경하고 동시에 URL 쿼리에도 반영하는 함수
   const updateStep = (newStep: number) => {
-    setStep(newStep);
+    setStep(newStep); // 상태 업데이트
     router.push({
-      pathname: router.pathname,
-      query: { ...router.query, step: newStep },
+      pathname: router.pathname, // 현재 경로 유지
+      query: { ...router.query, step: newStep }, // 기존 쿼리에 step만 새로 덮어쓰기
     });
   };
 
@@ -177,23 +121,9 @@ const CartPage = () => {
     fetchCart();
   }, [user]);
 
-  // 가격 계산
-  useEffect(() => {
-    if (!isCheckedInitialized || !isCartReady) return; // <- 이거 추가!
-
-    const selectedItems = cartList.filter((item) =>
-      checkedItems.includes(item.id)
-    );
-    const total = selectedItems.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
-    );
-    const fee = total > 25000 || total === 0 ? 0 : 2500;
-
-    setProductsPrice(formatPrice(total));
-    setDeliveryFee(fee);
-    setTotalPrice(formatPrice(total + fee));
-  }, [cartList, checkedItems, isCheckedInitialized, isCartReady]);
+  // 장바구니 전체 목록이 0이 아니고 선택한 상품과 갯수가 동일하면 전체 선택(checkbox) -> 전체 체크박스 상태
+  const allChecked =
+    cartList.length > 0 && checkedItems.length === cartList.length;
 
   // 전체 상품 선택/해제 처리
   const handleAllCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -244,6 +174,24 @@ const CartPage = () => {
     }
   };
 
+  // 가격 계산
+  useEffect(() => {
+    if (!isCheckedInitialized || !isCartReady) return;
+
+    const selectedItems = cartList.filter((item) =>
+      checkedItems.includes(item.id)
+    );
+    const total = selectedItems.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+    const fee = total > 25000 || total === 0 ? 0 : 2500;
+
+    setProductsPrice(formatPrice(total));
+    setDeliveryFee(formatPrice(fee));
+    setTotalPrice(formatPrice(total + fee));
+  }, [cartList, checkedItems, isCheckedInitialized, isCartReady]);
+
   // 주문하기
   const handleOrder = () => {
     if (checkedItems.length === 0) {
@@ -260,25 +208,19 @@ const CartPage = () => {
     updateStep(2);
   };
 
-  // // 선택 변경 시 localStorage에 저장
-  // useEffect(() => {
-  //   localStorage.setItem("checkedItems", JSON.stringify(checkedItems));
-  // }, [checkedItems]);
+  // localStorage에서 불러오기
+  useEffect(() => {
+    console.log("🌀 useEffect 실행됨!");
 
-  // // 컴포넌트 마운트 시 localStorage에서 불러오기
-  // useEffect(() => {
-  //   const storedItems = localStorage.getItem("checkedItems");
-  //   if (storedItems) {
-  //     setCheckedItems(JSON.parse(storedItems));
-  //   }
-  // }, []);
-
-  // checkedItems 변경될 때만 저장 (불러오기 완료 후에만)
-  // useEffect(() => {
-  //   if (isCheckedInitialized) {
-  //     localStorage.setItem("checkedItems", JSON.stringify(checkedItems));
-  //   }
-  // }, [checkedItems, isCheckedInitialized]);
+    const storedItems = localStorage.getItem("checkedItems");
+    if (storedItems) {
+      console.log("✅ localStorage에서 불러온 checkedItems:", storedItems);
+      setCheckedItems(JSON.parse(storedItems));
+    } else {
+      console.log("🚫 localStorage에 checkedItems 없음");
+    }
+    setIsCheckedInitialized(true);
+  }, []);
 
   useEffect(() => {
     // cartList를 서버에서 불러왔다면 여기에 로드 완료 표시
@@ -512,7 +454,7 @@ const CartPage = () => {
 
                   <div className="order-row">
                     <div>{productsPrice} 원</div>
-                    <div>{formatPrice(deliveryFee)} 원</div>
+                    <div>{deliveryFee} 원</div>
                     <div>{totalPrice} 원</div>
                   </div>
                 </div>
@@ -527,7 +469,7 @@ const CartPage = () => {
                   </div>
                   <div className="mobile-row">
                     <span>배송비</span>
-                    <span>{formatPrice(deliveryFee)} 원</span>
+                    <span>{deliveryFee} 원</span>
                   </div>
                   <div className="mobile-row total">
                     <span>총 결제 금액</span>
@@ -559,10 +501,7 @@ const CartPage = () => {
                 step={step}
                 setStep={setStep}
                 updateStep={updateStep}
-                // selectedItems={cartList.filter((item) =>
-                //   checkedItems.includes(item.id)
-                // )}
-                checkedItems={checkedItems}
+                // checkedItems={checkedItems}
                 cartList={cartList}
                 deliveryFee={deliveryFee}
                 setDeliveryFee={setDeliveryFee}

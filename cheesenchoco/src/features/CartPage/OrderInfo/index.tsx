@@ -16,26 +16,16 @@ interface CartProps {
   selectColor: string;
   selectSize: string;
   quantity: number;
-  // price: number;
   product: { img: any; name: string; price: number };
 }
 
 interface OrderInfoProps {
-  // step: number;
-  // setStep: React.Dispatch<React.SetStateAction<number>>;
-  // updateStep: (newStep: number) => void;
-  // selectedItems: CartProps[];
-  // deliveryFee: number;
-  // setDeliveryFee: React.Dispatch<React.SetStateAction<number>>;
-  // totalPrice: string;
-  // setTotalPrice: React.Dispatch<React.SetStateAction<string>>;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   updateStep: (newStep: number) => void;
-  checkedItems: number[]; // 예: 선택된 cart item들의 ID
   cartList: CartProps[]; // 전체 장바구니 목록
-  deliveryFee: number;
-  setDeliveryFee: React.Dispatch<React.SetStateAction<number>>;
+  deliveryFee: string;
+  setDeliveryFee: React.Dispatch<React.SetStateAction<string>>;
   totalPrice: string;
   setTotalPrice: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -44,27 +34,86 @@ export default function OrderInfo({
   step,
   setStep,
   updateStep,
-  // checkedItems,
   cartList,
   deliveryFee,
   setDeliveryFee,
   totalPrice,
   setTotalPrice,
 }: OrderInfoProps) {
-  // useEffect(() => {
-  //   console.log("넘겨받은 selectedItems 👉", selectedItems);
-  // }, [selectedItems]);
-
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const accessToken = Cookies.get("accessToken");
 
+  // 입력 상태 선언
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [isPhone, setIsPhone] = useState(false);
 
+  // 주소 관련 상태
   const [showAddrModal, setShowAddrModal] = useState(false); // 주소 검색 모달 활성화 여부
   const [addrNum, setAddrNum] = useState(""); // 우편번호
   const [addr, setAddr] = useState(""); // 주소
   const [detailAddr, setDetailAddr] = useState(""); // 상세주소
+
+  // 배송 요청 메시지 관련
+  const [delieveryMessageDropdown, setDelieveryMessageDropdown] =
+    useState<boolean>(false); // 배송 요청 메세지 드롭다운
+  const [selectedMessage, setSelectedMessage] = useState(""); // 선택된 배송 요청 메시지
+  const [showDirectInput, setShowDirectInput] = useState(false); // 직접입력 활성화 여부
+  const [directInput, setDirectInput] = useState(""); // 직접입력 시 메세지
+
+  // 배송 요청 옵션
+  const deliveryOptions = [
+    "배송 요청 사항을 선택해 주세요.",
+    "부재 시 경비실에 맡겨주세요.",
+    "부재 시 전화 또는 문자 주세요.",
+    "배송 전 연락주세요.",
+    "택배함에 넣어주세요.",
+    "파손위험 상품. 배송 주의해주세요.",
+    "직접입력",
+  ];
+
+  const [productsPrice, setProductsPrice] = useState("0"); // 상품 가격
+
+  const [localstorageItems, setLocalstorageItems] = useState<number[]>([]); // 로컬스토리지에 저장된 상품 상태 관리
+
+  const [agree1, setAgree1] = useState(false); // (필수) 개인정보 수집/이용 동의
+  const [agree2, setAgree2] = useState(false); // (필수) 개인정보 제3자 제공 동의
+  const [agree3, setAgree3] = useState(false); // (필수) 결제대행 서비스 이용약관 동의
+
+  const [allCheck, setAllCheck] = useState(false); // 모두 동의 체크박스
+
+  // 로컬스토리지에서 체크된 상품 ID 불러오기
+  useEffect(() => {
+    const storedItems = localStorage.getItem("checkedItems");
+    if (storedItems) {
+      // const parsedItems = JSON.parse(storedItems);
+      const parsedItems = JSON.parse(storedItems).map((id: any) => Number(id));
+      console.log("📦 로컬에서 불러온 checkedItems:", parsedItems);
+      setLocalstorageItems(parsedItems);
+    }
+  }, []);
+
+  // props로 받은 cartList에서 체크된 상품만 필터링
+  const selectedItems = useMemo(() => {
+    return cartList.filter((item) => localstorageItems.includes(item.id));
+  }, [cartList, localstorageItems]);
+
+  // 가격 계산
+  useEffect(() => {
+    if (cartList.length === 0 || localstorageItems.length === 0) return;
+
+    const total = selectedItems.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+    const fee = total > 25000 || total === 0 ? 0 : 2500;
+
+    setProductsPrice(formatPrice(total));
+    setDeliveryFee(formatPrice(fee));
+    setTotalPrice(formatPrice(total + fee));
+  }, [selectedItems, cartList, localstorageItems]);
 
   // 주소 찾기 모달창
   const openAddrModal = () => setShowAddrModal(true);
@@ -95,83 +144,16 @@ export default function OrderInfo({
     setDetailAddr(event.target.value);
   };
 
-  const [productsPrice, setProductsPrice] = useState("0"); // 상품 가격
-  // const [deliveryFee, setDeliveryFee] = useState(0); // 배송비
-  // const [totalPrice, setTotalPrice] = useState("0"); // 총 결제금액 (상품 + 배송비)
+  // 휴대폰 번호 입력 및 유효성 검사
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhone(e.target.value);
+    setPhone(formatted);
+    phoneValidation(formatted, setPhoneError, setIsPhone);
 
-  // const [checkedItems, setCheckedItems] = useState<number[]>([]); // 선택한 상품 selectedItems를 계산하기 위해 저장
+    console.log(isPhone, phoneError, "123");
+  };
 
-  // // 총 가격 계산
-  // useEffect(() => {
-  //   const Items = selectedItems.filter((item) =>
-  //     checkedItems.includes(item.id)
-  //   );
-
-  //   const total = Items.reduce(
-  //     (sum, item) => sum + item.price * item.quantity,
-  //     0
-  //   );
-
-  //   const fee = total > 250000 || total === 0 ? 0 : 2500;
-
-  //   setProductsPrice(formatPrice(total));
-  //   setDeliveryFee(fee);
-  //   setTotalPrice(formatPrice(total + fee));
-  // }, [checkedItems, selectedItems]);
-
-  const [checkedItems, setCheckedItems] = useState<number[]>([]);
-
-  useEffect(() => {
-    const storedItems = localStorage.getItem("checkedItems");
-    if (storedItems) {
-      // const parsedItems = JSON.parse(storedItems);
-      const parsedItems = JSON.parse(storedItems).map((id: any) => Number(id));
-      console.log("📦 로컬에서 불러온 checkedItems:", parsedItems);
-      setCheckedItems(parsedItems);
-    }
-  }, []);
-
-  const selectedItems = useMemo(() => {
-    return cartList.filter((item) => checkedItems.includes(item.id));
-  }, [cartList, checkedItems]);
-
-  useEffect(() => {
-    if (cartList.length === 0 || checkedItems.length === 0) return;
-
-    const total = selectedItems.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
-    );
-    const fee = total > 25000 || total === 0 ? 0 : 2500;
-
-    setProductsPrice(formatPrice(total));
-    setDeliveryFee(fee);
-    setTotalPrice(formatPrice(total + fee));
-  }, [selectedItems, cartList, checkedItems]);
-
-  // 휴대폰 유효성 검사
-  const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
-  const [isPhone, setIsPhone] = useState(false);
-
-  const [delieveryMessageDropdown, setDelieveryMessageDropdown] =
-    useState<boolean>(false); // 배송 요청 메세지 드롭다운
-  const [selectedMessage, setSelectedMessage] = useState(""); // 선택된 배송 요청 메시지
-  const [showDirectInput, setShowDirectInput] = useState(false); // 직접입력 활성화 여부
-  const [directInput, setDirectInput] = useState(""); // 직접입력 시 메세지
-
-  // 배송 요청 옵션
-  const deliveryOptions = [
-    "배송 요청 사항을 선택해 주세요.",
-    "부재 시 경비실에 맡겨주세요.",
-    "부재 시 전화 또는 문자 주세요.",
-    "배송 전 연락주세요.",
-    "택배함에 넣어주세요.",
-    "파손위험 상품. 배송 주의해주세요.",
-    "직접입력",
-  ];
-
-  // 드롭다운 toggle 함수
+  // 배송 메세지 드롭다운 toggle 함수
   const toggleDropdown = () => {
     setDelieveryMessageDropdown((prev) => !prev);
   };
@@ -189,22 +171,7 @@ export default function OrderInfo({
     }
   };
 
-  // 폰 번호 입력
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhone(e.target.value); // 숫자만 남기고 포맷
-    setPhone(formatted); // 상태 업데이트
-    phoneValidation(formatted, setPhoneError, setIsPhone); // 유효성 검사
-
-    console.log(isPhone, phoneError, "123");
-  };
-
-  const [agree1, setAgree1] = useState(false); // (필수) 개인정보 수집/이용 동의
-  const [agree2, setAgree2] = useState(false); // (필수) 개인정보 제3자 제공 동의
-  const [agree3, setAgree3] = useState(false); // (필수) 결제대행 서비스 이용약관 동의
-
-  const [allCheck, setAllCheck] = useState(false); // 모두 동의 체크박스
-
-  // 모두 동의하기 클릭 시
+  // 약관 모두 동의하기 클릭 시
   const handleAllCheck = () => {
     const newState = !allCheck;
     setAllCheck(newState);
@@ -516,7 +483,7 @@ export default function OrderInfo({
             </div>
             <div className="summary-row">
               <span>배송비</span>
-              <strong>{formatPrice(deliveryFee)}원</strong>
+              <strong>{deliveryFee}원</strong>
             </div>
             <div className="summary-row total">
               <span>총 결제 금액</span>
