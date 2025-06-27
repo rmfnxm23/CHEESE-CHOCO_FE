@@ -12,23 +12,7 @@ const Header = () => {
 
   const isMainPage = router.pathname === "/"; // 메인 페이지일 경우
 
-  // const [scrolled, setScrolled] = useState(false);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 500) {
-  //       setScrolled(true);
-  //     } else {
-  //       setScrolled(false);
-  //     }
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-  const [hideHeader, setHideHeader] = useState(false); // ✅ 요 부분이 중요
+  const [hideHeader, setHideHeader] = useState(false);
   const prevScrollY = useRef(0);
 
   const [category, setCategory] = useState([]);
@@ -51,32 +35,6 @@ const Header = () => {
     };
     getCategory();
   }, []);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScrollY = window.scrollY;
-
-  //     // console.log("현재 스크롤 위치:", currentScrollY);
-  //     // console.log("이전 스크롤 위치:", prevScrollY.current);
-
-  //     if (currentScrollY > prevScrollY.current && currentScrollY > 100) {
-  //       // console.log("⬇️ 아래로 스크롤: 헤더 숨김");
-  //       setHideHeader(true);
-  //     } else {
-  //       // console.log("⬆️ 위로 스크롤 또는 스크롤 위치가 작음: 헤더 표시");
-  //       setHideHeader(false);
-  //     }
-
-  //     if (showCategory) {
-  //       setShowCategory(false);
-  //     }
-
-  //     prevScrollY.current = currentScrollY;
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
 
   const TOP_THRESHOLD = 200; // 상단에서 200px 벗어나면 헤더 숨김, 안으로 들어오면 나타남
 
