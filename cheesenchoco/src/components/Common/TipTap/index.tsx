@@ -22,12 +22,6 @@ const CustomParagraph = Paragraph.extend({
   },
 });
 
-// const CustomParagraph = Paragraph.extend({
-//   renderHTML({ HTMLAttributes }) {
-//     return ["p", { class: "my-paragraph", ...HTMLAttributes }, 0];
-//   },
-// });
-
 export default function Editor({ value, onChange }: EditorProps) {
   const editor = useEditor({
     extensions: [
@@ -58,55 +52,46 @@ export default function Editor({ value, onChange }: EditorProps) {
 
   // 이미지 업로드
   const addImage = () => {
-    // 🔹 1. <input type="file"> 엘리먼트를 JS로 동적으로 생성
+    // 1. <input type="file"> 엘리먼트를 JS로 동적으로 생성
     const input = document.createElement("input");
     input.type = "file"; // 파일 선택 창
     input.accept = "image/*"; // 이미지 파일만 선택 가능
     input.multiple = true; // 여러 이미지 선택 허용
 
-    // 🔹 2. 파일이 선택되었을 때 실행되는 이벤트 핸들러 등록
+    // 2. 파일이 선택되었을 때 실행되는 이벤트 핸들러 등록
     input.onchange = async () => {
       if (!input.files || input.files.length === 0) return;
 
-      // 🔹 3. 선택된 파일들을 배열로 변환
-      //   const files = Array.from(input.files);
+      // 3. 선택된 파일들을 배열로 변환
+
       const formData = new FormData();
       Array.from(input.files).forEach((file) => formData.append("image", file));
 
-      // 🔹 4. 각 파일마다 서버에 업로드 → URL 받아와서 에디터에 삽입
-      //   for (const file of files) {
-      //     // 🔸 4-1. 서버에 보낼 formData 생성
-      //     const formData = new FormData();
-      //     formData.append("image", file); // 서버에서 'image'라는 키로 받음
-      console.log(formData.getAll("image"), "check");
-      //   return;
+      // 4. 각 파일마다 서버에 업로드 → URL 받아와서 에디터에 삽입
       try {
-        // 🔸 4-2. axios로 이미지 업로드 요청
         const response = await api.post(
           `/admin/product/callbackImage`,
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data", // 🔐 필수: 파일 업로드 형식 명시
+              "Content-Type": "multipart/form-data",
             },
           }
         );
 
-        // 🔸 4-3. 서버에서 반환한 이미지 URL 가져오기
+        // 서버에서 반환한 이미지 URL 가져오기
         const imageUrls = response.data.urls;
-        console.log(imageUrls, "hey");
 
-        // 🔸 4-4. Tiptap 에디터에 이미지 삽입;
+        // Tiptap 에디터에 이미지 삽입
         imageUrls.forEach((url: string) => {
           editor.chain().focus().setImage({ src: url }).run();
         });
       } catch (error) {
-        // 🔸 4-5. 에러 핸들링
         console.error("이미지 업로드 실패:", error);
       }
     };
 
-    // 🔹 5. 파일 선택 창을 유저에게 띄움
+    // 5. 파일 선택 창을 유저에게 띄움
     input.click();
   };
 
@@ -144,7 +129,6 @@ export default function Editor({ value, onChange }: EditorProps) {
         </div>
 
         {/* 에디터 본문 */}
-
         <EditorContent editor={editor} className="editor-content" />
       </TipTapStyled>
     </div>

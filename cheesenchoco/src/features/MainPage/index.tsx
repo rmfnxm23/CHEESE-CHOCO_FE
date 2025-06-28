@@ -33,7 +33,6 @@ interface productProps {
 const MainPage = () => {
   const router = useRouter();
 
-  // const swiperRef = useRef<any>(null);
   const swiperRef = useRef<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0); // 현재 슬라이드 인덱스 관리
 
@@ -48,16 +47,15 @@ const MainPage = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        // const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/admin/product`);
         let url = `/admin/product`;
+
         if (router.pathname === "/") {
           url += "?limit=4&sort=desc"; // 홈일 때만 4개만 요청
         }
-        console.log("요청 URL:", url);
 
         const res = await api.get(url);
+
         if (res.data.data) {
-          console.log(res.data.data);
           setProducts(res.data.data);
         }
       } catch (err) {
@@ -86,12 +84,6 @@ const MainPage = () => {
               onSwiper={(swiper) => (swiperRef.current = swiper)}
               onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             >
-              {/* <SwiperSlide>
-                <Image src={banner1} alt="banner" className="banner" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={banner2} alt="banner" className="banner" />
-              </SwiperSlide> */}
               {banners.map((banner, idx) => (
                 <SwiperSlide key={`${banner.label}-${idx}`}>
                   <Image
@@ -105,12 +97,6 @@ const MainPage = () => {
           </div>
           <div>
             <ul className="slick-dots">
-              {/* <li className="slick">
-                <span>PROMOTHIN 01</span>
-              </li>
-              <li className="slick">
-                <span>PROMOTHIN 02</span>
-              </li> */}
               {banners.map((banner, idx) => (
                 <li
                   key={idx}

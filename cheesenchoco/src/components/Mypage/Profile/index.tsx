@@ -40,11 +40,6 @@ const Profile = () => {
   // 비밀번호 변경 모달
   const [showModal, setShowModal] = useState(false);
 
-  const closeModal = () => {
-    setShowModal(false);
-    passFormik.resetForm(); // 닫을 때 초기화
-  };
-
   // 중복확인 - 휴대폰 번호
   const duplicateCheckPhone = async (phone: string) => {
     try {
@@ -113,14 +108,12 @@ const Profile = () => {
           });
           if (response.status === 201) {
             alert("탈퇴가 완료되었습니다.");
-            // dispatch(logoutUser());
             router.push("/");
           } else {
             alert("회원 탈퇴에 실패했습니다. 다시 시도해주세요.");
           }
         } catch (error) {
           console.error("회원 탈퇴 중 오류 발생:", error);
-          alert("오류가 발생했습니다. 다시 시도해주세요.");
         }
       },
     });
@@ -134,14 +127,6 @@ const Profile = () => {
       phone: user?.phone || "",
     },
     onSubmit: async (values) => {
-      console.log("회원정보 수정 요청:", values);
-      console.log(
-        "onSubmit 실행됨",
-        values,
-        isPhoneChanged,
-        isPhone,
-        phoneDuplicate.boolean
-      );
       if (!user) {
         return;
       }
@@ -185,7 +170,6 @@ const Profile = () => {
       passwordCheck: "",
     },
     onSubmit: async (values) => {
-      console.log("비밀번호 변경 요청:", values);
       if (!user) {
         return;
       }
@@ -334,7 +318,6 @@ const Profile = () => {
                     type="button"
                     className="duplicate btn right-btn"
                     onClick={() => duplicateCheckPhone(infoFormik.values.phone)}
-                    // disabled={!isPhone}
                     disabled={!isPhone || !isPhoneChanged}
                   >
                     중복확인
@@ -363,7 +346,6 @@ const Profile = () => {
             <button
               type="submit"
               className="update-btn"
-              // disabled={!isPhone}
               disabled={
                 isPhoneChanged ? !(isPhone && phoneDuplicate.boolean) : false
               }

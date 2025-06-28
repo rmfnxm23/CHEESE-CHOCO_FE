@@ -47,13 +47,11 @@ const Orders = () => {
           withCredentials: true,
         });
 
-        console.log(response.data.data);
         if (response.data.data) {
           setOrderList(response.data.data);
         } else alert("주문 내역이 없습니다.");
       } catch (err) {
-        console.error(err);
-        alert("주문 내역을 불러오는 중 오류가 발생했습니다.");
+        console.error("주문 내역 불러오는 중 오류 발생", err);
       }
     };
 

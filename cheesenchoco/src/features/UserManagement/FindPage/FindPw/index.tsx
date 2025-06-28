@@ -31,13 +31,9 @@ const FindPwPage = () => {
         });
 
         if (res.data.success === true) {
-          console.log(res.data.userId);
-          //   setNotFound("ok");
           setStep("success");
         } else {
-          //   setNotFound(res.data.message);
           alert(res.data.message);
-          //   router.push("/login");
           router.reload();
         }
       } catch (err) {

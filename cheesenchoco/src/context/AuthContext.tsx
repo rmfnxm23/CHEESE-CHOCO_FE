@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((res) => {
-          console.log(res.data.user);
           setUser(res.data.user);
           setIsLoading(false);
         })
@@ -47,9 +46,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           logout(); // 만료된 경우 로그아웃
           setIsLoading(false);
         });
-      // .finally(() => {
-      //   setIsLoading(false); // 완료되면 로딩 종료
-      // });
     } else {
       setIsLoading(false); // 토큰 없음 → 로딩 종료
     }
@@ -67,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("refreshToken");
 
     alert("로그아웃 되었습니다.");
-    // window.location.reload(); // 강제 새로고침 (권장되진 않지만 확실)
+
     router.push("/");
   };
 

@@ -23,9 +23,8 @@ const AdminPage = () => {
     const getProducts = async () => {
       try {
         const res = await api.get("/admin/product");
-        console.log(res.data.data);
-        const data = res.data.data;
 
+        const data = res.data.data;
         setProducts(data);
       } catch (err) {
         console.error(err);
@@ -35,13 +34,8 @@ const AdminPage = () => {
     getProducts();
   }, []);
 
-  useEffect(() => {
-    console.log(products);
-  });
-
   // 삭제 기능
   const handleDelete = async (id: number) => {
-    console.log("id", id);
     confirm("삭제하시겠습니까?");
     try {
       const res = await api.delete(`/admin/delete/${id}`);
@@ -61,11 +55,11 @@ const AdminPage = () => {
   // index: row index [Number]
 
   // HTML → 텍스트만 추출하는 유틸
-  const stripHtml = (html: string) => {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = DOMPurify.sanitize(html); // 안전하게 정화 후
-    return tempDiv.textContent || "";
-  };
+  // const stripHtml = (html: string) => {
+  //   const tempDiv = document.createElement("div");
+  //   tempDiv.innerHTML = DOMPurify.sanitize(html); // 안전하게 정화 후
+  //   return tempDiv.textContent || "";
+  // };
 
   const columns = [
     {
@@ -145,7 +139,6 @@ const AdminPage = () => {
   ];
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 

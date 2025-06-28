@@ -31,13 +31,12 @@ const DetailPage = () => {
     const getUpdateItem = async () => {
       try {
         const res = await api.get(`/admin/product/${id}`);
-        const item = res.data.data;
 
+        const item = res.data.data;
         setProduct(item);
-        console.log(item);
         setExistingImages(item.imgUrls || []);
       } catch (err) {
-        console.error(err);
+        console.error("상품 데이터 불러오기 실패:", err);
       }
     };
 

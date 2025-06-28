@@ -52,7 +52,7 @@ const JoinPage = () => {
         });
         return;
       }
-      console.log(email);
+
       const res = await api.post(`/user/check/email`, {
         email,
       });
@@ -122,10 +122,6 @@ const JoinPage = () => {
       phone: "",
     },
     onSubmit: async (values) => {
-      console.log(values);
-      console.log(isEmail, isPassword, isPasswordCheck, isname, isPhone);
-      console.log(emailDuplicate.boolean, phoneDuplicate.boolean);
-
       try {
         const res = await api.post("/user/register", values);
 

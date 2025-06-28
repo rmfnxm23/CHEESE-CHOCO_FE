@@ -118,7 +118,7 @@ const ProductDetail = () => {
       alert("이미 선택된 옵션입니다.");
       return;
     }
-    console.log(product?.price, "가격");
+
     const newOption = {
       color: selectedColor,
       size: selectedSize,
@@ -132,7 +132,6 @@ const ProductDetail = () => {
 
   // 항상 최신 selectedOptions를 ref에 반영
   useEffect(() => {
-    console.log(selectedColor, selectedSize, selectedOptionsRef.current);
     selectedOptionsRef.current = selectedOptions;
   }, [selectedOptions]);
 

@@ -25,7 +25,7 @@ const Header = () => {
     const getCategory = async () => {
       try {
         const res = await api.get("/category");
-        console.log(res.data.data);
+
         if (res.data.data) {
           setCategory(res.data.data);
         }

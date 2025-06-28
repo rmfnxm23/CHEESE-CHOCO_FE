@@ -18,7 +18,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const noHeaderFooter = ["/admin", "/login", "/join", "/find", "/404"];
   // const noHeaderFooter = ["Admin", "Login", "Join"]; // 대문자 표시
 
-  // console.log(Component.name);
   const isExcluded = noHeaderFooter.some((path) =>
     router.pathname.startsWith(path)
   );
@@ -31,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const requiresAuth = authRequiredRoutes.some((route) =>
     router.pathname.startsWith(route)
   );
-  console.log(authRequiredRoutes);
+
   return (
     <>
       {/* <Header /> */}

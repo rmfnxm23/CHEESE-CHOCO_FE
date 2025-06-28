@@ -9,7 +9,6 @@ import { passCheckValidation, passValidation } from "@/util/validation";
 const ChangePwPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  //   console.log(id);
 
   const [code, setCode] = useState(""); // 인증코드 관리
   const [certification, setCertification] = useState(false); // 인증 번호 일치 확인 시 form 나타나도록 관리
@@ -25,7 +24,6 @@ const ChangePwPage = () => {
   // 인증번호 일치 확인
   const handleVerifyCode = async () => {
     const data = { id, code };
-    console.log(data);
 
     try {
       const res = await api.post("/user/pwVerifyCode", data);
@@ -46,7 +44,6 @@ const ChangePwPage = () => {
       passwordCheck: "",
     },
     onSubmit: async (values) => {
-      console.log(values);
       const data = {
         id: id,
         password: values.password,

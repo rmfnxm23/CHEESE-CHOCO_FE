@@ -107,12 +107,7 @@ const CartPage = () => {
         });
         if (res.data.data) {
           setCartList(res.data.data);
-          console.log(res.data.data);
           setCheckedItems(res.data.data.map((item: any) => item.id));
-          console.log(
-            res.data.data.map((item: any) => item.id),
-            "----"
-          );
         }
       } catch (err) {
         console.error(err);
@@ -210,14 +205,9 @@ const CartPage = () => {
 
   // localStorage에서 불러오기
   useEffect(() => {
-    console.log("🌀 useEffect 실행됨!");
-
     const storedItems = localStorage.getItem("checkedItems");
     if (storedItems) {
-      console.log("✅ localStorage에서 불러온 checkedItems:", storedItems);
       setCheckedItems(JSON.parse(storedItems));
-    } else {
-      console.log("🚫 localStorage에 checkedItems 없음");
     }
     setIsCheckedInitialized(true);
   }, []);

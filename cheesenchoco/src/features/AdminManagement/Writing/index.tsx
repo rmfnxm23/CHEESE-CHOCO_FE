@@ -19,14 +19,12 @@ const WritingPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
 
-  // const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ ref 선언
-
   // 카테고리 데이터 가져오기
   useEffect(() => {
     const getCategory = async () => {
       try {
         const res = await api.get(`/category`);
-        console.log(res.data.data);
+
         if (res.data.data) {
           setCategories(res.data.data);
         }
@@ -51,7 +49,6 @@ const WritingPage = () => {
       setErrorMessage("");
 
       const { img, name, price, content, color, size, categoryId } = values;
-      // console.log(values);
 
       if (!categoryId) {
         return setErrorMessage("카테고리를 선택해주세요.");

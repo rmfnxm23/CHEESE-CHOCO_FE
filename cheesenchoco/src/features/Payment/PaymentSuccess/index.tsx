@@ -18,7 +18,6 @@ const PaymentSuccess = () => {
     if (!router.isReady) return;
 
     let { paymentKey, orderId, amount, paymentId } = router.query;
-    console.log("query params", router.query);
 
     if (!paymentKey || !orderId || !amount) {
       console.warn("필수 결제 정보 누락:", { paymentKey, orderId, amount });
@@ -30,17 +29,8 @@ const PaymentSuccess = () => {
         localStorage.getItem("checkedItems") || "[]"
       );
 
-      console.log(storedItems, "local"); // 숫자배열 // cart테이블의 id
-      // return;
       try {
         const numericAmount = Number(amount);
-
-        console.log("📦 [Sending to /payments/confirm]", {
-          paymentKey,
-          orderId,
-          amount: numericAmount,
-          items: storedItems,
-        });
 
         const response = await api.post(
           "/payment/confirm",
@@ -58,8 +48,6 @@ const PaymentSuccess = () => {
             withCredentials: true, // 쿠키 기반 인증이라면 이 옵션 추가
           }
         );
-
-        console.log("[Payment Confirm Success]", response.data);
 
         // ✅ 여기에 성공 메시지와 금액 표시용 값 설정
         setMessage("정상적으로 결제되었습니다");

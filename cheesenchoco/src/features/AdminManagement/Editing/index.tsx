@@ -20,8 +20,6 @@ interface productProps {
   categoryId: number;
   colorArray: string[];
   sizeArray: string[];
-  // color: string;
-  // size: string;
 }
 
 const EditingPage = () => {
@@ -49,8 +47,7 @@ const EditingPage = () => {
 
       try {
         const res = await api.get(`/admin/product/${id}`);
-        // console.log(res.data.data.img);
-        // console.log(res.data.data.imgUrls);
+
         const item = res.data.data;
 
         setProduct(item);
@@ -64,14 +61,10 @@ const EditingPage = () => {
   }, [id]);
 
   useEffect(() => {
-    console.log(product, "카테고리있나...");
-  });
-
-  useEffect(() => {
     const getCategory = async () => {
       try {
         const res = await api.get("/category");
-        console.log(res.data.data);
+
         if (res.data.data) {
           setCategory(res.data.data);
         }
@@ -83,7 +76,7 @@ const EditingPage = () => {
   }, []);
 
   const formik = useFormik({
-    enableReinitialize: true, // ← 이게 있어야 갱신됨
+    enableReinitialize: true,
     initialValues: {
       img: [],
       name: product?.name || "",
@@ -95,7 +88,6 @@ const EditingPage = () => {
       categoryId: product?.categoryId || "",
     },
     onSubmit: async (values) => {
-      console.log(values);
       setErrorMessage("");
 
       const img = values.img;
@@ -124,10 +116,6 @@ const EditingPage = () => {
 
       const formData = new FormData();
 
-      //   img.forEach((file) => {
-      //     formData.append("img", file); // 배열이 아닌 같은 key로 여러 개 추가
-      //   });
-
       // 새 이미지가 있으면 그걸 사용
       if (img && img.length > 0) {
         img.forEach((file: File) => {
@@ -143,11 +131,6 @@ const EditingPage = () => {
       formData.append("name", name);
       formData.append("price", price.replace(/,/g, ""));
       formData.append("content", content);
-
-      // 디버깅을 위한 console.log 추가
-      console.log("Type of color:", typeof color);
-      console.log("Value of color:", color);
-
       formData.append("color", color.join(","));
       formData.append("size", size.join(","));
       formData.append("categoryId", String(categoryId));
@@ -191,19 +174,6 @@ const EditingPage = () => {
       <div className="writing-container">
         <h2>상품 수정</h2>
         <form onSubmit={formik.handleSubmit}>
-          {/* <select
-            name="categoryId"
-            value={formik.values.categoryId}
-            onChange={formik.handleChange}
-          >
-            <option value="">카테고리 선택</option>
-            {category.map((x: any) => (
-              <option key={x.id} value={x.id}>
-                {x.category}
-              </option>
-            ))}
-          </select> */}
-
           <select
             name="categoryId"
             value={formik.values.categoryId}
@@ -230,27 +200,10 @@ const EditingPage = () => {
           <input
             type="file"
             name="img"
-            accept="image/*" // 이미지 파일만
-            multiple // 이미지 여러개 선택
+            accept="image/*"
+            multiple
             onChange={handleFileChange}
           />
-
-          {/* <div className="image-preview-wrapper">
-            {existingImages.map((src, index) => (
-              <div key={index} className="preview-box">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${src}`}
-                  alt={`기존 이미지-${index}`}
-                />
-              </div>
-            ))}
-
-            {previewImages.map((src, index) => (
-              <div key={`new-${index}`} className="preview-box">
-                <img src={src} alt={`새 이미지-${index}`} />
-              </div>
-            ))}
-          </div> */}
 
           <div className="image-preview-wrapper">
             {/* 새 이미지 선택했으면 그것만 보여줌 */}
@@ -300,12 +253,6 @@ const EditingPage = () => {
           <input
             type="text"
             name="color"
-            // placeholder="색상"
-            // value={formik.values.color}
-            // onChange={(e) => {
-            //   formik.handleChange(e);
-            //   setErrorMessage("");
-            // }}
             placeholder="색상 (예: 빨강,파랑)"
             value={formik.values.color.join(",")}
             onChange={(e) => {
@@ -318,12 +265,6 @@ const EditingPage = () => {
           <input
             type="text"
             name="size"
-            // placeholder="사이즈"
-            // value={formik.values.size}
-            // onChange={(e) => {
-            //   formik.handleChange(e);
-            //   setErrorMessage("");
-            // }}
             placeholder="사이즈 (예: S,M,L)"
             value={formik.values.size.join(",")}
             onChange={(e) => {
@@ -332,14 +273,6 @@ const EditingPage = () => {
               setErrorMessage("");
             }}
           />
-
-          {/* <input
-            type="text"
-            name="content"
-            placeholder="내용"
-            value={formik.values.content}
-            onChange={formik.handleChange}
-          /> */}
 
           <Editor
             value={formik.values.content}

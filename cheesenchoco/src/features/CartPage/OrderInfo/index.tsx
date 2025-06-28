@@ -88,9 +88,7 @@ export default function OrderInfo({
   useEffect(() => {
     const storedItems = localStorage.getItem("checkedItems");
     if (storedItems) {
-      // const parsedItems = JSON.parse(storedItems);
       const parsedItems = JSON.parse(storedItems).map((id: any) => Number(id));
-      console.log("📦 로컬에서 불러온 checkedItems:", parsedItems);
       setLocalstorageItems(parsedItems);
     }
   }, []);
@@ -149,8 +147,6 @@ export default function OrderInfo({
     const formatted = formatPhone(e.target.value);
     setPhone(formatted);
     phoneValidation(formatted, setPhoneError, setIsPhone);
-
-    console.log(isPhone, phoneError, "123");
   };
 
   // 배송 메세지 드롭다운 toggle 함수
@@ -195,21 +191,10 @@ export default function OrderInfo({
 
   // 결제하기 클릭
   const handlePay = async () => {
-    console.log("💰 totalPrice:", totalPrice, typeof totalPrice);
     if (!(agree1 && agree2 && agree3)) {
       alert("모든 필수 항목에 동의해 주세요.");
       return;
     }
-    // 모든 동의가 완료된 경우 진행
-    console.log("모든 동의 완료, 주문 진행");
-
-    // if (!(name && phone) || !isPhone || !(addrNum && addr && detailAddr)) {
-    //   console.log(isPhone, "boolean");
-    //   alert("배송지 정보를 입력해 주세요.");
-    //   return;
-    // }
-
-    console.log("배송지 완료");
 
     const shippingInfo = {
       name,
@@ -218,8 +203,6 @@ export default function OrderInfo({
       address: `${addr} ${detailAddr}`,
     };
 
-    console.log(shippingInfo);
-    // return;
     try {
       const res = await api.post("/address/register", shippingInfo, {
         headers: {
@@ -227,14 +210,10 @@ export default function OrderInfo({
         },
       });
 
-      console.log("📦 배송지 저장 완료:", res.data);
       const shippingInfoId = res.data.data.id;
-      console.log("배송정보 ID:", shippingInfoId);
 
       // 선택한 상품데이터 저장
       const orderData = { items: selectedItems };
-
-      console.log(orderData, "선택한 상품인가, 나오기는 하는지");
 
       // 2. 결제(주문) 생성
       const paymentRes = await api.post(
@@ -249,7 +228,6 @@ export default function OrderInfo({
         }
       );
       const paymentId = paymentRes.data.id;
-      console.log("주문(payment) ID:", paymentId);
 
       // 3. 주문 아이템 저장
       const orderRes = await api.post(
@@ -262,8 +240,6 @@ export default function OrderInfo({
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-      console.log("주문 아이템 저장 완료", orderRes.data.data);
-      // return;
 
       // 2. 결제창 오픈
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;

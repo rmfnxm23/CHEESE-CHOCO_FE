@@ -40,7 +40,6 @@ const LoginPage = () => {
         });
 
         if (res.data.success === false) {
-          console.log(res.data.message);
           setLoginError(res.data.message);
         } else {
           // 토큰 쿠키에 저장 (예: 1시간 만료)
