@@ -1,4 +1,3 @@
-// components/Layout.tsx
 import Footer from "@/components/Footer";
 
 export default function Layout({

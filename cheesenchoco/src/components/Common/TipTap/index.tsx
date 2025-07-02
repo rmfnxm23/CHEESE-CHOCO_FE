@@ -63,7 +63,6 @@ export default function Editor({ value, onChange }: EditorProps) {
       if (!input.files || input.files.length === 0) return;
 
       // 3. 선택된 파일들을 배열로 변환
-
       const formData = new FormData();
       Array.from(input.files).forEach((file) => formData.append("image", file));
 

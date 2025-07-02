@@ -25,7 +25,6 @@ export const LoadingStyle = styled.div`
     border: 5px solid #f3f3f3;
     border-top: 5px solid black;
     border-radius: 50%;
-    /* animation: spin 1.2s ease-in-out infinite; */
     animation: spin 1s linear infinite;
   }
   .Loading-text {

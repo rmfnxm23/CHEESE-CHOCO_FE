@@ -13,9 +13,7 @@ export const HeaderStyled = styled.div`
     left: 0;
     width: 100%;
     z-index: 999;
-
     display: flex;
-    /* justify-content: space-between; */
     justify-content: center;
     align-items: center;
     padding: 40px 40px;
@@ -54,8 +52,6 @@ export const HeaderStyled = styled.div`
     }
 
     .header-right {
-      /* display: flex; */
-      /* gap: 50px; */
       position: fixed;
       right: 0;
       padding-right: 30px;
@@ -71,7 +67,7 @@ export const HeaderStyled = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0; // 이거 추가!
+    bottom: 0;
     width: 100%;
     height: 33vh;
     background: rgba(255, 255, 255, 0.9);
@@ -89,7 +85,7 @@ export const HeaderStyled = styled.div`
 
       input {
         width: 100%;
-        padding: 1rem 4rem 1rem 1rem; // 오른쪽에 버튼 들어갈 공간 확보
+        padding: 1rem 4rem 1rem 1rem;
         font-size: 1rem;
         border: none;
         border-bottom: 1px solid gray;
