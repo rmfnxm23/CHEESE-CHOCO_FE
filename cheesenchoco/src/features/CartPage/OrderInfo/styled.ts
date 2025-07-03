@@ -13,68 +13,7 @@ export const OrderInfoStyled = styled.div`
     padding: 0;
   }
 
-  /* .left {
-    flex: 2;
-  }
-
-  .right {
-    flex: 1;
-    background-color: #f8f9fa;
-    border: 4px solid #ddd;
-    padding: 20px;
-    height: fit-content;
-  }
-
-  h4 {
-    margin-bottom: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    width: 130px;
-
-    &::after {
-      content: "*";
-      display: inline;
-      padding-left: 3px;
-      font-size: 12px;
-      color: rgb(255, 72, 0);
-      vertical-align: -2px;
-    }
-  }
-
-  input {
-    padding: 10px 12px;
-    border: 1px solid black;
-    font-size: 14px;
-
-    box-sizing: border-box;
-
-    &:focus {
-      border-color: #007aff;
-      outline: none;
-    }
-  }
-
-  button {
-    background-color: #007aff;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #005fcc;
-    }
-  }
-
-  .deliveryInfo {
-    display: flex;
-    padding-bottom: 10px;
-  } */
   .left {
-    /* flex: 2; */
     width: 60%;
 
     .deleveryInfo-wrap {
@@ -114,7 +53,6 @@ export const OrderInfoStyled = styled.div`
           outline: none;
 
           &:focus {
-            /* border-color: #007aff; */
             outline: none;
           }
         }
@@ -139,17 +77,12 @@ export const OrderInfoStyled = styled.div`
     }
 
     .address-search {
-      /* color: #007aff; */
       background-color: rgb(244, 244, 244);
       padding: 10px 16px;
       border: none;
       font-size: 14px;
       cursor: pointer;
       transition: background-color 0.2s ease;
-
-      /* &:hover {
-        color: #005fcc;
-      } */
     }
 
     .address-list {
@@ -172,27 +105,11 @@ export const OrderInfoStyled = styled.div`
   }
 
   .messageChoice {
-    /* input::after {
-      content: "";
-      width: 12px;
-      height: 6.5px;
-      display: inline-block;
-      z-index: 5;
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: url(//static.wconcept.co.kr/mobile/images/common/svg/IconArrowDown03.svg)
-        center no-repeat;
-      background-size: auto;
-    } */
-
     .selectedMessage {
       position: relative;
       width: 100%;
 
       .selectedInput {
-        /* margin-bottom: 10px; */
         width: 100%;
       }
     }
@@ -209,7 +126,6 @@ export const OrderInfoStyled = styled.div`
     }
 
     ul {
-      /* width: 80%; */
       width: 100%;
     }
     li {
@@ -286,7 +202,6 @@ export const OrderInfoStyled = styled.div`
 
     .deliveryInfo h5 {
       flex: 0px !important;
-      /* flex: none; */
       width: 100%;
       margin-bottom: 5px !important;
       font-size: 14px;
@@ -336,12 +251,11 @@ export const OrderInfoStyled = styled.div`
 
   .right {
     flex: 1;
-    /* background-color: #f8f9fa; */
     border: 4px solid #ddd;
     padding: 20px;
     height: fit-content;
     position: sticky;
-    top: 120px; // 🧠 header 높이에 맞춰 조정
+    top: 120px;
   }
 
   /* 결제 부분 */
@@ -367,33 +281,19 @@ export const OrderInfoStyled = styled.div`
   }
 
   /* 주문 동의 부분 */
-  /* .order-agree {
-    .checkbox-all,
-    ul li {
-      list-style: none;
-      display: flex;
-    }
-  } */
-
   .order-agree {
-    /* padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #fafafa; */
     margin-top: 20px;
     border-top: 1px solid rgb(228, 228, 228);
 
     .checkbox-all {
       display: flex;
       align-items: center;
-      /* justify-content: space-between; */
       margin: 12px 0;
 
       input[type="checkbox"] {
         margin-right: 8px;
         border: 1px solid rgb(228, 228, 228);
         outline: none;
-        /* transform: scale(1.2); */
       }
 
       label {
@@ -410,14 +310,13 @@ export const OrderInfoStyled = styled.div`
       li {
         display: flex;
         align-items: center;
-        /* justify-content: space-between; */
+
         margin-bottom: 8px;
 
         input[type="checkbox"] {
           margin-right: 8px;
           border: 1px solid rgb(228, 228, 228);
           outline: none;
-          /* transform: scale(1.1); */
         }
 
         label {

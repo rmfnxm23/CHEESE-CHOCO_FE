@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ProductCardStyled = styled.div`
-  width: 100%; // grid의 column width를 따름
+  width: 100%;
 
   .product-card {
     border: 1px solid #888;

@@ -1,21 +1,18 @@
 import styled from "styled-components";
 
 export const MypageLayoutStyled = styled.div`
-  /* margin-top: 100px; */
   width: 100%;
   max-width: 1500px;
-  /* background-color: #f9f9f9; */
   margin: 0 auto;
 
   .mypage-container {
     display: flex;
     max-width: 1200px;
-    /* min-height: 90vh; */
+
     margin: 100px auto 0;
     padding: 3rem 2rem;
     background-color: #fff;
     border-radius: 12px;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); */
 
     @media (max-width: 768px) {
       flex-direction: column;
@@ -26,11 +23,10 @@ export const MypageLayoutStyled = styled.div`
     width: 25%;
     min-width: 200px;
     border-right: 1px solid #eee;
-    /* padding-right: 2rem; */
 
     display: flex;
     flex-direction: column;
-    gap: 2.5rem; // 섹션 간 간격 조정
+    gap: 2.5rem;
 
     .userName {
       text-align: left;
@@ -59,14 +55,12 @@ export const MypageLayoutStyled = styled.div`
           transition: all 0.2s ease;
 
           &:hover {
-            /* color: #0070f3; */
             text-decoration: underline;
           }
         }
 
         &.active a {
           font-weight: 700;
-          /* color: #0070f3; */
           color: #000;
         }
       }
@@ -123,7 +117,6 @@ export const MypageLayoutStyled = styled.div`
 
       h2 {
         text-align: center;
-        /* display: none; */
       }
     }
   }

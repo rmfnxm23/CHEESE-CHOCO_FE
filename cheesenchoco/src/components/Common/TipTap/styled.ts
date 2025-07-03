@@ -38,11 +38,6 @@ export const TipTapStyled = styled.div`
     .toolbar-btn button:hover {
       background-color: #e0e0e0;
     }
-    /* .toolbar-btn button.active {
-      border-color: #007bff;
-      background-color: #e8f0fe;
-      color: #007bff;
-    } */
 
     .ProseMirror {
       // Tiptap 에디터의 입력창에 직접 높이를 지정해야함.

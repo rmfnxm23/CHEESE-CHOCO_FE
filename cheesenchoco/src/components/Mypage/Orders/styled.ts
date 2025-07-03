@@ -42,11 +42,6 @@ export const OrdersStyled = styled.div`
     background-color: #fefefe;
   }
 
-  .order-table tbody tr.order-date-row:not(:first-of-type) td.order-date {
-    /* padding-top: 24px;
-    padding-bottom: 10px; */
-  }
-
   /* 상품 행 기본 */
   .order-table tbody tr {
     background-color: #fff;

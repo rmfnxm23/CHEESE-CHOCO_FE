@@ -1,8 +1,6 @@
-// styled.ts
 import styled from "styled-components";
 
 export const FooterStyled = styled.footer`
-  /* background-color: #f9f9f9; */
   border-top: 1px solid #eee;
   padding: 40px 20px;
   font-size: 14px;

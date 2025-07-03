@@ -110,7 +110,6 @@ export const ProfileStyled = styled.div`
     padding: 0.6rem 1.3rem;
     font-size: 1rem;
     font-weight: bold;
-    /* background-color: #2563eb; */
     background-color: #7d7d7d;
     color: #fff;
     border: none;

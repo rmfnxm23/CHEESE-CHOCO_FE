@@ -3,8 +3,7 @@ import styled from "styled-components";
 
 export const ProductDetailStyled = styled.div`
   margin-top: 100px;
-  /* max-width: 1800px; */
-  /* padding: 0 7%; */
+
   border-top: 1px solid #aaa;
 
   .detail-container {
@@ -15,8 +14,7 @@ export const ProductDetailStyled = styled.div`
     display: flex;
     justify-content: center;
     box-sizing: border-box;
-    overflow: visible; // 💡 중요
-    /* border-top: 1px solid #aaa; */
+    overflow: visible;
 
     .detail-Image {
       width: 55%;
@@ -34,42 +32,6 @@ export const ProductDetailStyled = styled.div`
         aspect-ratio: 1 / 1;
         object-fit: fill;
       }
-
-      /* .img-wrap {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .img-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
-      } */
-      /* .img-wrap {
-        width: 100%;
-        margin-top: 20px;
-
-        .slide-img-box {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 1 / 1; 
-          overflow: hidden;
-        }
-
-        .slide-img-box img {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          top: 0;
-          left: 0;
-        }
-      } */
     }
 
     .swiper-button-prev,
@@ -79,7 +41,6 @@ export const ProductDetailStyled = styled.div`
 
       &::after {
         font-size: 1.5rem !important;
-        /* font-weight: 600 !important; */
       }
     }
 
@@ -91,32 +52,16 @@ export const ProductDetailStyled = styled.div`
       }
     }
 
-    /* .product-info {
-      width: 40%;
-      margin: 0 80px;
-      padding: 3% 0 0;
-      box-sizing: border-box;
-      position: relative;
-    }
-
-    .product-fixed {
-      width: 100%;
-      position: absolute;
-      top: 0;
-    } */
-
     .product-info {
       width: 45%;
-      /* margin-left: 80px; */
       margin: 0 4%;
       padding: 3% 0 0;
       box-sizing: border-box;
-      /* position: relative; → ❌ 제거해야 sticky 정상작동 */
     }
 
     .product-fixed {
       position: sticky;
-      top: 120px; // 🧠 header 높이에 맞춰 조정
+      top: 120px;
       width: 100%;
       padding: 5px;
     }
@@ -167,8 +112,6 @@ export const ProductDetailStyled = styled.div`
       max-height: 280px;
       font-family: "ProximaNova-Regular", "Noto Sans KR";
       padding: 0 15px;
-      /* border-top: 1px solid #f0f0f0; */
-      /* border-bottom: 1px solid #f0f0f0; */
       background: #fafafa;
 
       &.active {
@@ -265,7 +208,6 @@ export const ProductDetailStyled = styled.div`
       right: 0;
       background: white;
       border-top: 1px solid #ddd;
-      /* padding: 10px; */
       justify-content: space-around;
       z-index: 9999;
       box-shadow: 0 -2px 8px rgb(0 0 0 / 0.1);
@@ -279,28 +221,23 @@ export const ProductDetailStyled = styled.div`
       border-radius: 4px;
     }
     .bottom-fixed-buttons .action-cart {
-      /* background-color: #f0f0f0; */
       margin-right: 8px;
       padding: 20px 0;
     }
     .bottom-fixed-buttons .action-buy {
       border-left: 1px solid #ddd;
       padding: 20px 0;
-      /* background-color: #0070f3; */
-      /* color: white; */
     }
   }
 `;
 
 export const CustomModal = styled(Modal)`
   .ant-modal-content {
-    /* border-radius: none !important; */
     background-color: #f5f5f5;
     padding: 40px 40px 50px;
   }
 
   .ant-modal-body {
-    /* background: #fff0f6; */
     border-bottom: none;
     padding: 30px;
     text-align: center;
@@ -308,7 +245,6 @@ export const CustomModal = styled(Modal)`
   }
 
   .ant-modal-footer {
-    /* text-align: center; */
     margin-top: 20px;
 
     .ant-button {
@@ -395,11 +331,9 @@ export const CustomDrawer = styled(Drawer)`
 
     .selected-products {
       background: #fafafa;
-      /* border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc; */
+
       max-height: 240px;
       overflow-y: auto;
-      /* margin-bottom: 10px; */
 
       &.active {
         border-top: 1px solid #ccc;

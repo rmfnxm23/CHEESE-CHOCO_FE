@@ -8,7 +8,7 @@ export const CartPageStyled = styled.div`
 
   h2 {
     text-align: center;
-    /* border-top: 1px solid #ececec; */
+
     padding: 60px 3% 40px;
     width: 100%;
   }
@@ -45,7 +45,7 @@ export const CartPageStyled = styled.div`
     justify-content: center;
     align-items: center;
     gap: 50px;
-    /* margin-bottom: 100px; */
+
     padding: 100px;
     font-size: 30px;
     font-weight: 500;
@@ -53,13 +53,6 @@ export const CartPageStyled = styled.div`
     border-bottom: 1px solid #e5e5e5;
 
     button {
-      /* border-radius: none;
-      padding: 10px 20px;
-      color: #f5f5f5;
-      border: none;
-      cursor: pointer;
-      flex: 1 1 0%;
-      max-width: 400px; */
       display: flex;
       flex: 1 1 0%;
       align-items: center;
@@ -75,9 +68,6 @@ export const CartPageStyled = styled.div`
       border-radius: none;
       cursor: pointer;
     }
-    /* .shopping-btn {
-      background-color: #000;
-    } */
   }
 
   /* 툴바 */
@@ -350,7 +340,6 @@ export const CartPageStyled = styled.div`
 
     .order-mobile {
       display: block;
-      /* background: #f9f9f9; */
       padding: 16px;
       border-radius: 8px;
     }
@@ -359,7 +348,6 @@ export const CartPageStyled = styled.div`
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      /* border-bottom: 1px solid #ddd; */
       font-size: 14px;
     }
 

@@ -74,7 +74,6 @@ export const EditingStyled = styled.div`
   .image-preview-wrapper img {
     max-width: 150px;
     aspect-ratio: 1/1;
-    /* height: auto; */
     border-radius: 6px;
     border: 1px solid #eee;
   }

@@ -76,10 +76,7 @@ export const MainpageStyled = styled.div`
 
     .product-grid {
       display: grid;
-      /* grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); */
       grid-template-columns: repeat(4, 1fr);
-      /* gap: 32px; */
-      /* padding: 40px 20px; */
       justify-content: center;
 
       @media (max-width: 1024px) {
@@ -109,7 +106,6 @@ export const MainpageStyled = styled.div`
 
     .contact {
       width: 100%;
-      /* overflow: hidden;  */
     }
 
     .contact img {
