@@ -93,13 +93,13 @@ body,
 /* span에 밑줄 애니메이션 */
 .category-text {
   position: relative;
-  display: inline-block; /* 텍스트 길이에 맞게 */
+  display: inline-block;
 }
 
 /* hover 시 밑줄 애니메이션 */
 .category-text {
   position: relative;
-  display: inline-block; /* 텍스트 길이만큼 너비 */
+  display: inline-block;
   cursor: pointer;
 }
 
@@ -148,8 +148,8 @@ body.shop-category-page .custom-popover .ant-popover-inner {
 
 /* Main 페이지일 때만 Popover 배경 적용 */
 .custom-popover.main-page {
-  color: white; /* 메인페이지일 때 글씨 흰색 */
-  background: transparent; /* 필요시 */
+  color: white;
+  background: transparent;
 }
 
 /* 필요시 팝오버 내부 텍스트 색상 조절 */

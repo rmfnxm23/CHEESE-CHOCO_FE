@@ -25,8 +25,6 @@ export const passValidation = (
   setPassError: Dispatch<SetStateAction<string>>,
   setIsPassword: Dispatch<SetStateAction<boolean>>
 ) => {
-  // const regex =
-  //   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[a-zA-Z\d!@#$%^&*()]{8,16}$/; // 대소문자 중 하나 포함
   const regex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[a-zA-Z\d!@#$%^&*()]{8,16}$/; // 대소문자 각각 하나 포함
   if (!password) {
