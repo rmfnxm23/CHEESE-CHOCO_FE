@@ -5,12 +5,9 @@ const nextConfig = {
     styledComponents: true,
   },
 
-  // antd 라이브러리 컴파일 관련 에러
-  // 모듈 없는 경우
-  // next.config.js에 아래의 설정을 하여 바밸을 통해 트랜스파일이 될수있게 설정을 하였다
-  //transpilePackages 옵션을 이용하여 지정왼 패키지들을 Babel을 통해 해결하게 하였다
+  // antd 및 rc-* 패키지가 ES Module(ESM) 형식으로 배포되어 Next.js에서 트랜스파일 오류 발생
+  // next.config.js의 transpilePackages 옵션을 통해 Babel로 변환되도록 설정하여 해결
   transpilePackages: [
-    // antd & deps
     "@ant-design",
     "@rc-component",
     "antd",
@@ -47,17 +44,6 @@ const nextConfig = {
     "rc-upload",
     "rc-util",
   ],
-  // images: {
-  //   domains: ["localhost:5000", "*"],
-  //   remotePatterns: [
-  //     {
-  //       protocol: "http",
-  //       hostname: "localhost",
-  //       port: "5000",
-  //       pathname: "/admin/**",
-  //     },
-  //   ],
-  // },
 };
 
 module.exports = nextConfig;
