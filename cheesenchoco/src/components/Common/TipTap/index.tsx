@@ -3,11 +3,11 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TipTapStyled } from "./styled";
 import Paragraph from "@tiptap/extension-paragraph";
 
-import { Bold, Italic, Heading2, Image as ImageIcon } from "lucide-react";
+import { Bold, Italic, Image as ImageIcon } from "lucide-react";
 import api from "@/lib/api";
 
 interface EditorProps {
@@ -23,6 +23,8 @@ const CustomParagraph = Paragraph.extend({
 });
 
 export default function Editor({ value, onChange }: EditorProps) {
+  const [headingDropdownOpen, setHeadingDropdownOpen] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -41,6 +43,29 @@ export default function Editor({ value, onChange }: EditorProps) {
     // editable: true,
     immediatelyRender: false, // 🚨 중요: Tiptap이 인스턴스 생성 시 에디터 내용을 즉시 렌더링할지 여부
   });
+
+  // 현재 active heading level 찾기
+  const currentLevel =
+    ([1, 2, 3, 4, 5] as const).find((level) =>
+      editor?.isActive("heading", { level })
+    ) ?? null;
+
+  // 외부 클릭시 드롭다운 닫기 (옵션)
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setHeadingDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
@@ -98,7 +123,7 @@ export default function Editor({ value, onChange }: EditorProps) {
     <div className="content-wrap">
       <TipTapStyled>
         {/* 툴바 */}
-        <div className="toolbar-btn" style={{ display: "flex", gap: 10 }}>
+        <div className="toolbar-btn">
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -111,19 +136,84 @@ export default function Editor({ value, onChange }: EditorProps) {
             onClick={() => editor.chain().focus().toggleItalic().run()}
             className={editor.isActive("italic") ? "italic text-blue-600" : ""}
           >
-            Italic
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-          >
-            H2
+            <Italic size={18} />
           </button>
 
+          {/* 커스텀 Heading 드롭다운 */}
+          <div
+            className="heading-dropdown"
+            ref={dropdownRef}
+            style={{ position: "relative", userSelect: "none" }}
+          >
+            <div
+              className="heading-dropdown-button"
+              onClick={() => setHeadingDropdownOpen((open) => !open)}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: 4,
+                padding: "6px 12px",
+                cursor: "pointer",
+                minWidth: 50,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <span>{currentLevel ? `H${currentLevel}` : "H"}</span>
+              <span
+                style={{
+                  marginLeft: 8,
+                  fontSize: 12,
+                  transform: headingDropdownOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                  transition: "transform 0.2s",
+                }}
+              >
+                ▼
+              </span>
+            </div>
+
+            {headingDropdownOpen && (
+              <ul
+                className="heading-dropdown-list"
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 4px)",
+                  left: 0,
+                  right: 0,
+                  margin: 0,
+                  padding: 0,
+                  listStyle: "none",
+                  border: "1px solid #ccc",
+                  borderRadius: 4,
+                  backgroundColor: "white",
+                  zIndex: 1000,
+                }}
+              >
+                {([1, 2, 3, 4, 5] as const).map((level) => (
+                  <li
+                    key={level}
+                    onClick={() => {
+                      editor.chain().focus().toggleHeading({ level }).run();
+                      setHeadingDropdownOpen(false);
+                    }}
+                    style={{
+                      padding: "6px 12px",
+                      cursor: "pointer",
+                      backgroundColor: currentLevel === level ? "#e0e0e0" : "",
+                    }}
+                  >
+                    H{level}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <button type="button" onClick={addImage}>
-            이미지 추가
+            <ImageIcon size={18} />
           </button>
         </div>
 
