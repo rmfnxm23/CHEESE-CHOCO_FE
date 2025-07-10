@@ -123,7 +123,7 @@ const ProductDetail = () => {
       color: selectedColor,
       size: selectedSize,
       price: product?.price || 0,
-      quantity: 1, // 초기 수량 1로 추가
+      quantity: 1,
     };
     setSelectedOptions((prev) => [...prev, newOption]);
   };
@@ -197,7 +197,7 @@ const ProductDetail = () => {
     if (!drawerOpened) {
       showDrawer();
       setDrawerOpened(true);
-      return; // ✅ 처음엔 드로어만 열고 종료
+      return;
     }
 
     if (selectedOptions.length === 0) {
@@ -206,7 +206,7 @@ const ProductDetail = () => {
     }
 
     handleCart(id);
-    setIsModalOpen(true); // ✅ 장바구니 담김 모달
+    setIsModalOpen(true);
   };
 
   const handleBuyClick = () => {
@@ -226,7 +226,7 @@ const ProductDetail = () => {
     } else {
       handleCart(id);
       setIsModalOpen(true);
-      router.push("/order"); // ✅ 주문 페이지로 이동
+      router.push("/order");
     }
   };
 
@@ -426,6 +426,7 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
+
             {/* 800px 이하에서만 보이는 하단 고정 버튼 */}
             <div className="bottom-fixed-buttons">
               <div className="action-cart" onClick={handleCartClick}>

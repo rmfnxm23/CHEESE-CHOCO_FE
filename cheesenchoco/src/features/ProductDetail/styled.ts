@@ -89,7 +89,7 @@ export const ProductDetailStyled = styled.div`
         outline: none;
         box-shadow: none;
         box-sizing: border-box;
-        max-width: 100%; // 너비 초과 방지
+        max-width: 100%;
 
         &:focus {
           border: 1px solid #ccc;
@@ -171,13 +171,15 @@ export const ProductDetailStyled = styled.div`
         border-right: none;
       }
     }
-  } /* 하단 고정 버튼 */
+  }
+
+  /* 하단 고정 버튼 */
   /* 기본적으로 하단 고정 버튼 숨기기 */
   .bottom-fixed-buttons {
     display: none;
   }
 
-  /* 800px 이하 화면에서 보이도록 */
+  /* 1200px 이하 화면에서 보이도록 */
   @media screen and (max-width: 1200px) {
     .action-cart,
     .action-buy {
@@ -186,7 +188,7 @@ export const ProductDetailStyled = styled.div`
     }
   }
 
-  /* 800px 이하 화면에서 보이도록 */
+  /* 700px 이하 화면에서 보이도록 */
   @media screen and (max-width: 700px) {
     .product-info {
       display: none;
@@ -198,7 +200,7 @@ export const ProductDetailStyled = styled.div`
     }
 
     .product-button {
-      display: none; /* 기존 버튼 숨김 */
+      display: none;
     }
     .bottom-fixed-buttons {
       display: flex;

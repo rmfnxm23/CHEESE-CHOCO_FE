@@ -7,8 +7,6 @@ export const SidebarStyled = styled.div`
   max-height: calc(100vh - 64px);
   overflow-y: auto;
   overflow-x: hidden;
-  /* border-right: 1px solid #eaeaea; */
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -40,7 +38,6 @@ export const SidebarStyled = styled.div`
       .item {
         display: flex;
         align-items: center;
-        /* justify-content: space-between; */
         width: 100%;
         height: 2.8rem;
         border-radius: 6px;
@@ -94,7 +91,6 @@ export const SidebarStyled = styled.div`
 
         .menuActiveBG {
           position: absolute;
-          /* background-color: rgba(255, 255, 255, 0); */
           width: 100%;
           height: 100%;
           border-radius: 6px;
@@ -124,11 +120,8 @@ export const SidebarStyled = styled.div`
       }
 
       &:hover {
-        /* box-shadow: 0 0 1.5rem rgba(226, 93, 35, 0.5); */
         background: rgba(255, 255, 255, 0.15);
         color: rgba(255, 255, 255, 0.6);
-
-        /* color: #000; */
       }
     }
   }

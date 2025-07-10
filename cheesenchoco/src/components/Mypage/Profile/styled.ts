@@ -36,13 +36,13 @@ export const ProfileStyled = styled.div`
     &:focus {
       border: none;
       outline: none;
-      box-shadow: none; /* 브라우저 기본 포커스 그림자 제거 */
+      box-shadow: none;
     }
   }
 
   input[readonly] {
     cursor: default;
-    background-color: #f9f9f9; /* 선택사항: readonly 느낌 강조 */
+    background-color: #f9f9f9;
   }
 
   .myInfo {

@@ -258,7 +258,6 @@ export default function OrderInfo({
         orderId: `payment_${paymentId}`, // 주문 고유번호: paymentId 포함
         orderName: "상품 구매",
         customerName: name,
-        // successUrl: "http://localhost:3000/payment/success",
         successUrl: `http://localhost:3000/payment/success?paymentId=${paymentId}`,
         failUrl: "http://localhost:3000/payment/fail",
       });

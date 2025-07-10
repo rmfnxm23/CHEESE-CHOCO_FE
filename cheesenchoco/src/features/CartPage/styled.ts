@@ -29,7 +29,7 @@ export const CartPageStyled = styled.div`
       list-style: none;
       color: #aaa;
       font-weight: normal;
-      display: inline-block; /* 🔑 글자만큼 width */
+      display: inline-block;
 
       &.active {
         color: #000;
