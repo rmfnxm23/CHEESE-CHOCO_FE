@@ -140,25 +140,10 @@ export default function Editor({ value, onChange }: EditorProps) {
           </button>
 
           {/* 커스텀 Heading 드롭다운 */}
-          <div
-            className="heading-dropdown"
-            ref={dropdownRef}
-            style={{ position: "relative", userSelect: "none" }}
-          >
+          <div className="heading-dropdown" ref={dropdownRef}>
             <div
               className="heading-dropdown-button"
               onClick={() => setHeadingDropdownOpen((open) => !open)}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: 4,
-                padding: "6px 12px",
-                cursor: "pointer",
-                minWidth: 50,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "white",
-              }}
             >
               <span>{currentLevel ? `H${currentLevel}` : "H"}</span>
               <span
@@ -176,22 +161,7 @@ export default function Editor({ value, onChange }: EditorProps) {
             </div>
 
             {headingDropdownOpen && (
-              <ul
-                className="heading-dropdown-list"
-                style={{
-                  position: "absolute",
-                  top: "calc(100% + 4px)",
-                  left: 0,
-                  right: 0,
-                  margin: 0,
-                  padding: 0,
-                  listStyle: "none",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                  backgroundColor: "white",
-                  zIndex: 1000,
-                }}
-              >
+              <ul className="heading-dropdown-list">
                 {([1, 2, 3, 4, 5] as const).map((level) => (
                   <li
                     key={level}

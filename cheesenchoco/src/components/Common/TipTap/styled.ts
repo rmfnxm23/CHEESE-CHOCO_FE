@@ -58,4 +58,36 @@ export const TipTapStyled = styled.div`
     display: block;
     margin: 1em 0;
   }
+
+  /* 커스텀 Heading 드롭다운 */
+  .heading-dropdown {
+    position: relative;
+    user-select: none;
+  }
+
+  .heading-dropdown-button {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    min-width: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+  }
+
+  .heading-dropdown-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    z-index: 1000;
+  }
 `;

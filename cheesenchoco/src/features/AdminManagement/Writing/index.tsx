@@ -120,7 +120,7 @@ const WritingPage = () => {
   return (
     <WritingStyled className={clsx("writing-wrap")}>
       <div className="writing-container">
-        <h2>상품 등록</h2>
+        <h2 className="writing-title">상품 등록</h2>
         <form onSubmit={formik.handleSubmit}>
           <select
             name="categoryId"

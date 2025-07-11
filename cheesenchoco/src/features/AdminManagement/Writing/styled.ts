@@ -11,7 +11,7 @@ export const WritingStyled = styled.div`
     font-family: "Pretendard", sans-serif;
   }
 
-  .writing-container h2 {
+  .writing-title {
     text-align: center;
     margin-bottom: 24px;
     font-size: 24px;
