@@ -26,6 +26,7 @@ export const ProductCardStyled = styled.div`
     aspect-ratio: 1 / 1;
     object-fit: cover;
     display: block;
+    cursor: pointer;
   }
 
   .product-title {
@@ -36,6 +37,7 @@ export const ProductCardStyled = styled.div`
     border-top: 1px solid #888;
     height: 70px;
     gap: 20px;
+    cursor: pointer;
 
     .product-name {
       width: 70%;
