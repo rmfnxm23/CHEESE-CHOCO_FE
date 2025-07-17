@@ -51,7 +51,8 @@ const DetailPage = () => {
         <div className="header">
           <h2>상품 상세 정보</h2>
           <div className="meta-info-text">
-            등록일: {product.createdAt} | 수정: {product.updatedAt}
+            등록일: {new Date(product.createdAt).toISOString().slice(0, 10)} |
+            수정일: {new Date(product.updatedAt).toISOString().slice(0, 10)}
           </div>
           <div className="button-group">
             <button onClick={() => router.push(`/admin/edit/${product.id}`)}>
