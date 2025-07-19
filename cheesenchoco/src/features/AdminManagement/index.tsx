@@ -36,7 +36,9 @@ const AdminPage = () => {
 
   // 삭제 기능
   const handleDelete = async (id: number) => {
-    confirm("삭제하시겠습니까?");
+    const confirmed = confirm("삭제하시겠습니까?");
+    if (!confirmed) return; // 취소 시 종료
+
     try {
       const res = await api.delete(`/admin/delete/${id}`);
 
@@ -164,10 +166,10 @@ const AdminPage = () => {
         dataSource={products}
         columns={columns}
         rowKey="id" // rowKey 미설정 시 selectbox를 선택해도 전체선택 / 전체해제만 가능
-        // onRow={()=>{router.push("/admin")}}
         onRow={(record) => ({
           onClick: () => router.push(`/admin/detail/${record.id}`),
         })}
+        rowClassName="productList-row"
       />
     </>
   );

@@ -41,4 +41,8 @@ export const ContentStyled = styled.div`
     background: white;
     height: 100%;
   }
+
+  .productList-row {
+    cursor: pointer;
+  }
 `;
