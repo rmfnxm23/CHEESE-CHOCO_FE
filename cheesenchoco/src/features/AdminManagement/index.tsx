@@ -79,7 +79,7 @@ const AdminPage = () => {
             width={30}
             height={30}
             src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${record.imgUrls[0]}`}
-            alt={`기존 이미지-${record.id}`}
+            alt={`상품 이미지-${record.id}`}
           />
         );
       },

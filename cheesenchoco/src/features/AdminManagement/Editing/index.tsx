@@ -217,7 +217,7 @@ const EditingPage = () => {
                   <div key={`existing-${index}`} className="preview-box">
                     <img
                       src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${src}`}
-                      alt={`기존 이미지-${index}`}
+                      alt={`상품 이미지-${index}`}
                     />
                   </div>
                 ))}

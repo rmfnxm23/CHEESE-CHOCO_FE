@@ -34,7 +34,7 @@ const ProductCard = ({
           <div className="img-box">
             <img
               src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/product/${imgUrls}`}
-              alt={`기존 이미지-${id}`}
+              alt={`상품 이미지-${id}`}
             />
           </div>
         </div>
