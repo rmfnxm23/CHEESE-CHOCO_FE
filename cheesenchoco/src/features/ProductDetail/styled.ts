@@ -106,6 +106,63 @@ export const ProductDetailStyled = styled.div`
       }
     }
 
+    .product-option {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 20px;
+
+      .color,
+      .size {
+        position: relative;
+        width: 100%;
+      }
+
+      .custom-select-box {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .arrow {
+          margin-left: 8px;
+          font-size: 12px;
+        }
+      }
+
+      .custom-select-options {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        width: 100%;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        z-index: 10;
+        box-sizing: border-box;
+        max-height: 200px;
+        overflow-y: auto;
+
+        .custom-option {
+          padding: 12px;
+          cursor: pointer;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+    }
+
     /* 선택된 상품 자동 추가 */
     .selected-products {
       width: 100%;
@@ -236,7 +293,7 @@ export const ProductDetailStyled = styled.div`
 export const CustomModal = styled(Modal)`
   .ant-modal-content {
     background-color: #f5f5f5;
-    padding: 40px 40px 50px;
+    padding: 40px 40px;
   }
 
   .ant-modal-body {
@@ -260,6 +317,7 @@ export const CustomModal = styled(Modal)`
         color: #f5f5f5;
         border: none;
         cursor: pointer;
+        width: -webkit-fill-available;
       }
       .cart-btn {
         background-color: #7d7d7d;

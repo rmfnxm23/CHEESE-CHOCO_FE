@@ -49,7 +49,10 @@ const LoginPage = () => {
           login(res.data.user, res.data.accessToken, res.data.refreshToken);
 
           alert(res.data.message);
-          router.push("/");
+          // router.push("/");
+          // ✅ 로그인 후 redirect 경로로 이동
+          const { redirect } = router.query;
+          router.push(redirect ? String(redirect) : "/");
         }
       } catch (err: any) {
         console.error(err);

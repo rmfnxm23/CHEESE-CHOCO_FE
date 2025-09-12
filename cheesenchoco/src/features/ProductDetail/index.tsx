@@ -21,6 +21,9 @@ import Image from "next/image";
 import remove from "@/assets/images/remove.png";
 import { DrawerProps, RadioChangeEvent } from "antd";
 
+import keyDown from "@/assets/images/keyboard_arrow_down_20.png";
+import keyUp from "@/assets/images/keyboard_arrow_up_20.png";
+
 interface productProps {
   id: number;
   name: string;
@@ -55,6 +58,8 @@ const ProductDetail = () => {
 
   const [openColor, setOpenColor] = useState(false);
   const [openSize, setOpenSize] = useState(false);
+
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     const getUpdateItem = async (id: any) => {
@@ -135,12 +140,46 @@ const ProductDetail = () => {
     selectedOptionsRef.current = selectedOptions;
   }, [selectedOptions]);
 
-  useEffect(() => {
-    if (!selectedColor || !selectedSize || !product) return;
+  // useEffect(() => {
+  //   if (!selectedColor || !selectedSize || !product) return;
 
-    const isDuplicate = selectedOptionsRef.current.some(
-      (opt) => opt.color === selectedColor && opt.size === selectedSize
-    );
+  //   const isDuplicate = selectedOptionsRef.current.some(
+  //     (opt) => opt.color === selectedColor && opt.size === selectedSize
+  //   );
+
+  //   if (isDuplicate) {
+  //     alert("이미 선택한 옵션입니다.");
+  //   } else {
+  //     const newOption = {
+  //       color: selectedColor,
+  //       size: selectedSize,
+  //       price: product.price,
+  //       quantity: 1,
+  //     };
+  //     setSelectedOptions((prev) => [...prev, newOption]);
+  //   }
+
+  //   // ✅ 선택 후 select 초기화는 항상 실행
+  //   setSelectedColor("");
+  //   setSelectedSize("");
+  // }, [selectedColor, selectedSize, product]);
+
+  useEffect(() => {
+    if (!product) return;
+
+    const hasColor = existingColors.length > 0;
+    const hasSize = existingSize.length > 0;
+
+    const colorValid = !hasColor || (hasColor && selectedColor);
+    const sizeValid = !hasSize || (hasSize && selectedSize);
+
+    if (!colorValid || !sizeValid) return;
+
+    const isDuplicate = selectedOptionsRef.current.some((opt) => {
+      const sameColor = hasColor ? opt.color === selectedColor : true;
+      const sameSize = hasSize ? opt.size === selectedSize : true;
+      return sameColor && sameSize;
+    });
 
     if (isDuplicate) {
       alert("이미 선택한 옵션입니다.");
@@ -154,10 +193,10 @@ const ProductDetail = () => {
       setSelectedOptions((prev) => [...prev, newOption]);
     }
 
-    // ✅ 선택 후 select 초기화는 항상 실행
-    setSelectedColor("");
-    setSelectedSize("");
-  }, [selectedColor, selectedSize, product]);
+    // 초기화
+    if (hasColor) setSelectedColor("");
+    if (hasSize) setSelectedSize("");
+  }, [selectedColor, selectedSize, product, existingColors, existingSize]);
 
   // 옵션 선택 후 자동 추가 목록 삭제
   const handleRemoveOption = (index: number) => {
@@ -291,41 +330,98 @@ const ProductDetail = () => {
                     {formatPrice(product?.price)} 원
                   </div>
 
-                  {/* 색상 옵션 */}
+                  {/* 상품 선택 옵션 */}
                   <div className="product-option">
-                    {existingColors.length >= 1 && (
-                      <select
-                        name="color"
-                        value={selectedColor}
-                        onChange={(e) => {
-                          setSelectedColor(e.target.value);
-                        }}
-                      >
-                        <option value="">color</option>
-                        {existingColors.map((x) => (
-                          <option value={x} key={x}>
-                            {x}
-                          </option>
-                        ))}
-                      </select>
+                    {/* 색상 선택 */}
+                    {existingColors.length > 0 && (
+                      <div className="color">
+                        <div
+                          className="custom-select-box"
+                          onClick={() => {
+                            setOpenColor((prev) => !prev);
+                            setOpenSize(false);
+                          }}
+                        >
+                          {selectedColor || "color"}
+                          <Image
+                            src={openColor ? keyUp : keyDown}
+                            alt="Arrow"
+                            className="arrow"
+                          />
+                        </div>
+
+                        {openColor && (
+                          <div className="custom-select-options">
+                            <div
+                              className="custom-option"
+                              onClick={() => {
+                                setSelectedColor("");
+                                setOpenColor(false);
+                              }}
+                            >
+                              color
+                            </div>
+                            {existingColors.map((x) => (
+                              <div
+                                key={x}
+                                className="custom-option"
+                                onClick={() => {
+                                  setSelectedColor(x);
+                                  setOpenColor(false);
+                                }}
+                              >
+                                {x}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     )}
 
-                    {/* 사이즈 옵션 */}
-                    {existingSize.length >= 1 && (
-                      <select
-                        name="size"
-                        value={selectedSize}
-                        onChange={(e) => {
-                          setSelectedSize(e.target.value);
-                        }}
-                      >
-                        <option value="">size</option>
-                        {existingSize.map((x) => (
-                          <option value={x} key={x}>
-                            {x}
-                          </option>
-                        ))}
-                      </select>
+                    {/* 사이즈 선택 */}
+                    {existingSize.length > 0 && (
+                      <div className="size">
+                        <div
+                          className="custom-select-box"
+                          onClick={() => {
+                            setOpenSize((prev) => !prev);
+                            setOpenColor(false);
+                          }}
+                        >
+                          {selectedSize || "size"}
+                          <Image
+                            src={openSize ? keyUp : keyDown}
+                            alt="Arrow"
+                            className="arrow"
+                          />
+                        </div>
+
+                        {openSize && (
+                          <div className="custom-select-options">
+                            <div
+                              className="custom-option"
+                              onClick={() => {
+                                setSelectedSize("");
+                                setOpenSize(false);
+                              }}
+                            >
+                              size
+                            </div>
+                            {existingSize.map((x) => (
+                              <div
+                                key={x}
+                                className="custom-option"
+                                onClick={() => {
+                                  setSelectedSize(x);
+                                  setOpenSize(false);
+                                }}
+                              >
+                                {x}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
 
@@ -339,7 +435,9 @@ const ProductDetail = () => {
                       {selectedOptions.map((opt, idx) => (
                         <li key={idx}>
                           <p>
-                            {opt.color} / {opt.size}
+                            {opt.color && opt.size
+                              ? `${opt.color} / ${opt.size}`
+                              : opt.color || opt.size}
                           </p>
                           <div className="item-calculate">
                             <div>{opt.quantity}</div>
@@ -364,7 +462,7 @@ const ProductDetail = () => {
 
                   {/* 카트 or 결제 버튼 */}
                   <div className="product-button">
-                    <div
+                    {/* <div
                       className="action-cart"
                       onClick={() => {
                         if (
@@ -379,9 +477,34 @@ const ProductDetail = () => {
                       }}
                     >
                       CART
+                    </div> */}
+                    <div
+                      className="action-cart"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          setModalMessage("로그인이 필요합니다.");
+                          setIsModalOpen(true);
+                          return;
+                        }
+
+                        if (
+                          Array.isArray(selectedOptions) &&
+                          selectedOptions.length > 0
+                        ) {
+                          handleCart(id);
+                          setModalMessage(
+                            "선택하신 상품이 장바구니에 담겼습니다."
+                          );
+                          setIsModalOpen(true);
+                        } else {
+                          addSelectedOption();
+                        }
+                      }}
+                    >
+                      CART
                     </div>
 
-                    <CustomModal
+                    {/* <CustomModal
                       open={isModalOpen}
                       onCancel={() => setIsModalOpen(false)}
                       centered
@@ -406,9 +529,59 @@ const ProductDetail = () => {
                       }
                     >
                       <p>선택하신 상품이 장바구니에 담겼습니다.</p>
+                    </CustomModal> */}
+                    <CustomModal
+                      open={isModalOpen}
+                      onCancel={() => setIsModalOpen(false)}
+                      centered
+                      footer={
+                        modalMessage === "로그인이 필요합니다." ? (
+                          <div className="ant-button">
+                            <button
+                              className="shop-btn"
+                              onClick={() => {
+                                setIsModalOpen(false);
+                              }}
+                            >
+                              취소
+                            </button>
+                            <button
+                              className="cart-btn"
+                              onClick={() => {
+                                setIsModalOpen(false);
+                                router.push(
+                                  `/login?redirect=/product-detail/${id}`
+                                );
+                              }}
+                            >
+                              로그인 하기
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="ant-button">
+                            <button
+                              className="shop-btn"
+                              onClick={() => {
+                                setIsModalOpen(false);
+                                setSelectedOptions([]);
+                              }}
+                            >
+                              쇼핑 계속하기
+                            </button>
+                            <button
+                              className="cart-btn"
+                              onClick={() => router.push("/cart")}
+                            >
+                              장바구니로 이동
+                            </button>
+                          </div>
+                        )
+                      }
+                    >
+                      <p>{modalMessage}</p>
                     </CustomModal>
 
-                    <div
+                    {/* <div
                       className="action-buy"
                       onClick={() => {
                         if (selectedOptions.length > 0) {
@@ -418,6 +591,31 @@ const ProductDetail = () => {
                         } else {
                           addSelectedOption(); // 또는 옵션 선택 안내 메시지
                         }
+                      }}
+                    >
+                      BUY NOW
+                    </div> */}
+                    <div
+                      className="action-buy"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          // 1. 로그인 안 되어 있으면 무조건 로그인 모달
+                          setModalMessage("로그인이 필요합니다.");
+                          setIsModalOpen(true);
+                          return;
+                        }
+
+                        // 2. 로그인 O → 옵션 선택 여부 확인
+                        if (
+                          !Array.isArray(selectedOptions) ||
+                          selectedOptions.length === 0
+                        ) {
+                          addSelectedOption(); // 옵션 선택 유도
+                          return;
+                        }
+
+                        // 3. 로그인 O + 옵션 선택 O → 결제 페이지로 이동
+                        router.push("/cart?step=2");
                       }}
                     >
                       BUY NOW
@@ -563,7 +761,9 @@ const ProductDetail = () => {
                     {selectedOptions.map((opt, idx) => (
                       <li key={idx}>
                         <p>
-                          {opt.color} / {opt.size}
+                          {opt.color && opt.size
+                            ? `${opt.color} / ${opt.size}`
+                            : opt.color || opt.size}
                         </p>
                         <div className="item-calculate">
                           <div>{opt.quantity}</div>

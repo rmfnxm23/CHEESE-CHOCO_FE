@@ -196,6 +196,11 @@ export default function OrderInfo({
       return;
     }
 
+    if (!(name && phone && addrNum)) {
+      alert("배송지 정보가 정확히 입력되어 있는지 확인해주세요.");
+      return;
+    }
+
     const shippingInfo = {
       name,
       phone,
