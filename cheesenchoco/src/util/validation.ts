@@ -8,7 +8,7 @@ export const emailValidation = (
 ) => {
   const regex = /\S+@\S+\.\S+/;
   if (!email) {
-    setEmailError("아이디를 입력해주세요.");
+    setEmailError("이메일을 입력해주세요.");
     setIsEmail(false);
   } else if (!regex.test(email)) {
     setEmailError("이메일의 형식이 아닙니다.");
