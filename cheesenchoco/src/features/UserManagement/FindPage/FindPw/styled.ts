@@ -39,14 +39,14 @@ export const FindPwStyled = styled.div`
 
           &:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: #333;
           }
         }
 
         button {
           padding: 14px 16px;
           font-size: 16px;
-
+          background-color: gray;
           color: #fff;
           border: none;
           border-radius: 8px;
@@ -54,7 +54,7 @@ export const FindPwStyled = styled.div`
           transition: background-color 0.3s;
 
           &:hover {
-            background-color: #0056b3;
+            background-color: black;
           }
         }
 

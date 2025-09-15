@@ -45,6 +45,7 @@ export const ChangePwStyled = styled.div`
 
           &:focus {
             outline: none;
+            border-color: #333;
           }
         }
 
@@ -59,7 +60,7 @@ export const ChangePwStyled = styled.div`
           transition: background-color 0.3s;
 
           &:hover {
-            background-color: #0056b3;
+            background-color: black;
           }
         }
       }
@@ -79,7 +80,7 @@ export const ChangePwStyled = styled.div`
 
           &:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: #333;
           }
         }
 
@@ -104,10 +105,6 @@ export const ChangePwStyled = styled.div`
         div {
           margin-top: 10px;
           font-size: 15px;
-        }
-
-        strong {
-          color: #007bff;
         }
       }
 

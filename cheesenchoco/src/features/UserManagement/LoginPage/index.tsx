@@ -88,21 +88,21 @@ const LoginPage = () => {
               />
             </div>
             <div className="findpage">
-              <span
+              <div
                 onClick={() => {
                   router.push("/find/id");
                 }}
               >
                 id찾기
-              </span>
-              /
-              <span
+              </div>
+              <div>/</div>
+              <div
                 onClick={() => {
                   router.push("/find/pw");
                 }}
               >
                 pw찾기
-              </span>
+              </div>
             </div>
 
             <button

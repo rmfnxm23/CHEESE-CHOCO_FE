@@ -4,8 +4,11 @@ import { useState } from "react";
 import clsx from "clsx";
 import api from "@/lib/api";
 import { FindIdStyled } from "./styled";
+import { useRouter } from "next/router";
 
 const FindIdPage = () => {
+  const router = useRouter();
+
   const [findId, setFindId] = useState<any>(null); // 일치하는 폰번호의 이메일
 
   const [findIdMessage, setFindIdMessage] = useState(""); // 데이터 없을때나 빈값일 때 메세지
@@ -32,7 +35,7 @@ const FindIdPage = () => {
           setFindIdMessage(res.data.message);
           setFindId("");
         } else {
-          alert("아이디 찾기 성공");
+          // alert("아이디 찾기 성공");
           setFindId(res.data.userPhone.email);
           setFindIdMessage("");
         }
@@ -62,8 +65,27 @@ const FindIdPage = () => {
             아이디 찾기
           </button>
           {findId ? (
-            <div>
-              아이디는 <strong>{findId}</strong>입니다.
+            <div className="find-success">
+              <div>
+                아이디는 <strong>{findId}</strong>입니다.
+              </div>
+              <div className="next-step">
+                <div
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                >
+                  로그인
+                </div>
+                <div>/</div>
+                <div
+                  onClick={() => {
+                    router.push("/find/pw");
+                  }}
+                >
+                  pw찾기
+                </div>
+              </div>
             </div>
           ) : (
             <div className="error-message">{findIdMessage}</div>

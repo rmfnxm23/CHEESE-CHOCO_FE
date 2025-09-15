@@ -58,9 +58,7 @@ const FindPwPage = () => {
                   setNotFound("");
                 }}
               />
-              <button type="submit" style={{ cursor: "pointer" }}>
-                찾기
-              </button>
+              <button type="submit">찾기</button>
 
               {notFound && <div className="error-message">{notFound}</div>}
             </form>

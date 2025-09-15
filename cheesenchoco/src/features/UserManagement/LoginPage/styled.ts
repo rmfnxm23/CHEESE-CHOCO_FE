@@ -53,12 +53,13 @@ export const LoginPageStyled = styled.div`
       justify-content: end;
       align-items: center;
       gap: 5px;
-      margin-top: 0.5rem;
+      margin-top: 0.8rem;
       font-size: 0.85rem;
       color: #555;
       text-align: right;
+      line-height: 1;
 
-      span {
+      div {
         cursor: pointer;
         &:hover {
           text-decoration: underline;

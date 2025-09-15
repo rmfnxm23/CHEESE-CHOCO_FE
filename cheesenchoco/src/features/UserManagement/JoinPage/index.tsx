@@ -149,7 +149,7 @@ const JoinPage = () => {
         <h2>회원가입</h2>
         <form onSubmit={formik.handleSubmit}>
           {/* 아이디 (이메일) */}
-          <div>아이디(이메일)</div>
+          <div>이메일</div>
           <div className="duplicate-wrap">
             <input
               type="email"

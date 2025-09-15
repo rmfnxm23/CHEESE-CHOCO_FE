@@ -14,6 +14,7 @@ export const JoinPageStyled = styled.div`
 
     h2 {
       text-align: center;
+      margin-bottom: 1.5rem;
     }
 
     input {
@@ -47,7 +48,7 @@ export const JoinPageStyled = styled.div`
     border-radius: 40px;
     border: none;
     background-color: gray;
-    color: #ccc;
+    color: #fff;
     transition: background-color 0.3s ease;
   }
 

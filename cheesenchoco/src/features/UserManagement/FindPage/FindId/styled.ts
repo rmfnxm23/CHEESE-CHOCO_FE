@@ -39,14 +39,14 @@ export const FindIdStyled = styled.div`
 
           &:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: #333;
           }
         }
 
         button {
           padding: 14px 16px;
           font-size: 16px;
-
+          background-color: gray;
           color: #fff;
           border: none;
           border-radius: 8px;
@@ -54,12 +54,11 @@ export const FindIdStyled = styled.div`
           transition: background-color 0.3s;
 
           &:hover {
-            background-color: #0056b3;
+            background-color: black;
           }
         }
 
         div {
-          margin-top: 10px;
           font-size: 15px;
         }
 
@@ -71,6 +70,31 @@ export const FindIdStyled = styled.div`
       .error-message {
         color: red;
         margin-top: 10px;
+      }
+
+      .find-success {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .next-step {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        color: #555;
+        text-align: right;
+        line-height: 1;
+
+        div {
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }
