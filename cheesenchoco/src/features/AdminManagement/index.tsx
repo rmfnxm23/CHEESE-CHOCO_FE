@@ -50,6 +50,31 @@ const AdminPage = () => {
     }
   };
 
+  // 선택 삭제 기능
+  const handleBulkDelete = async () => {
+    if (selectedRowKeys.length === 0) {
+      alert("삭제할 상품을 선택하세요.");
+      return;
+    }
+
+    const confirmed = confirm("선택한 상품을 모두 삭제하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      await Promise.all(
+        selectedRowKeys.map((id) => api.delete(`/admin/delete/${id}`))
+      );
+
+      alert("선택한 상품이 삭제되었습니다.");
+      setProducts((prev) =>
+        prev.filter((item) => !selectedRowKeys.includes(item.id))
+      );
+      setSelectedRowKeys([]); // 선택 초기화
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // render 옵션은 Array.map()처럼 작동합니다.
   // render: (text, row, index) => {};
   // text: name의 data [String]
@@ -99,16 +124,6 @@ const AdminPage = () => {
         return <span>{formattedPrice}원</span>;
       },
     },
-    // {
-    //   title: "Content",
-    //   dataIndex: "content",
-    //   key: "content",
-    //   render: (html: string) => {
-    //     const text = stripHtml(html);
-    //     const truncated = text.length > 100 ? text.slice(0, 100) + "..." : text;
-    //     return <span>{truncated}</span>;
-    //   },
-    // },
     {
       title: "Management",
       dataIndex: "management",
@@ -153,14 +168,20 @@ const AdminPage = () => {
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3>상품 관리</h3>
-        <Button
-          onClick={() => {
-            router.push("/admin/write");
-          }}
-        >
-          상품 등록
-        </Button>
+        <div style={{ display: "flex", gap: 10 }}>
+          <Button onClick={handleBulkDelete} danger>
+            선택 삭제
+          </Button>
+          <Button
+            onClick={() => {
+              router.push("/admin/write");
+            }}
+          >
+            상품 등록
+          </Button>
+        </div>
       </div>
+
       <Table
         rowSelection={rowSelection}
         dataSource={products}
