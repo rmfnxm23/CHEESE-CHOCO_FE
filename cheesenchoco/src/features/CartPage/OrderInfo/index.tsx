@@ -161,7 +161,7 @@ export default function OrderInfo({
 
     if (option === "직접입력") {
       setShowDirectInput(true);
-      setSelectedMessage("");
+      setSelectedMessage("직접입력");
     } else {
       setShowDirectInput(false);
     }
@@ -369,9 +369,9 @@ export default function OrderInfo({
                 <input
                   type="text"
                   value={directInput}
-                  onChange={(e) => setSelectedMessage(e.target.value)}
-                  placeholder="내용을 입력해주세요. (20자 이내)"
-                  maxLength={20}
+                  onChange={(e) => setDirectInput(e.target.value)}
+                  placeholder="내용을 입력해주세요. (30자 이내)"
+                  maxLength={30}
                   className="directInput"
                 />
               )}

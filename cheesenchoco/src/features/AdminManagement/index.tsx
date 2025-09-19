@@ -1,4 +1,4 @@
-import { Button, Table } from "antd";
+import { Button, Select, Table } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
@@ -10,6 +10,7 @@ interface productProps {
   price: number;
   content: string;
   imgUrls: string[];
+  createdAt: string;
 }
 
 const AdminPage = () => {
@@ -18,6 +19,10 @@ const AdminPage = () => {
   const [products, setProducts] = useState<productProps[]>([]); // 상품 관리
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const [sortOption, setSortOption] = useState<
+    "latest" | "oldest" | "priceAsc" | "priceDesc"
+  >("oldest");
 
   useEffect(() => {
     const getProducts = async () => {
@@ -75,6 +80,17 @@ const AdminPage = () => {
     }
   };
 
+  // 상품 정렬
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortOption === "priceAsc") return a.price - b.price;
+    if (sortOption === "priceDesc") return b.price - a.price;
+    if (sortOption === "latest")
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (sortOption === "oldest")
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    return 0; // 기본값
+  });
+
   // render 옵션은 Array.map()처럼 작동합니다.
   // render: (text, row, index) => {};
   // text: name의 data [String]
@@ -92,7 +108,8 @@ const AdminPage = () => {
     {
       title: "No.",
       dataIndex: "id",
-      key: "id",
+      key: "no",
+      render: (_: any, __: any, index: number) => index + 1,
     },
     {
       title: "Thumbnail",
@@ -182,9 +199,24 @@ const AdminPage = () => {
         </div>
       </div>
 
+      {/* 정렬 */}
+      <div style={{ marginTop: 10, marginBottom: 10 }}>
+        <Select
+          value={sortOption}
+          style={{ width: 120 }}
+          onChange={(value) => setSortOption(value)}
+          options={[
+            { value: "oldest", label: "등록일순" },
+            { value: "latest", label: "최신순" },
+            { value: "priceAsc", label: "가격 낮은순" },
+            { value: "priceDesc", label: "가격 높은순" },
+          ]}
+        />
+      </div>
+
       <Table
         rowSelection={rowSelection}
-        dataSource={products}
+        dataSource={sortedProducts}
         columns={columns}
         rowKey="id" // rowKey 미설정 시 selectbox를 선택해도 전체선택 / 전체해제만 가능
         onRow={(record) => ({
